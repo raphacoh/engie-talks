@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(!/[?&]track=/.test(location.search))history.replaceState(null,"",location.pathname+"?track=em"+location.hash);</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Raw Material of Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#0B0B0D; --bg2:#121215; --ink:#F2EFE8; --muted:#A6A198; --faint:#5A5750;
+  --amber:#F5A623; --amber2:#B8731A; --amber-dim:rgba(245,166,35,.16); --line:#26262B;
+  --display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --sans:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;-webkit-font-smoothing:antialiased;overflow:hidden}
+body.free{overflow:auto;height:auto}
+a{color:var(--amber)}
+::selection{background:var(--amber);color:#000}
+
+/* ---------- stage ---------- */
+#stage{position:relative;width:100%;height:100vh}
+body.free #stage{height:auto}
+.scene{position:absolute;inset:0;display:none;padding:6vh 7vw;align-items:center}
+.scene.active{display:flex}
+body.free .scene{position:relative;display:flex;min-height:100vh;border-bottom:1px solid var(--line)}
+.wrap{width:100%;max-width:1180px;margin:0 auto}
+.scene.center .wrap{text-align:center}
+
+/* ---------- type ---------- */
+.eyebrow{font-family:var(--mono);font-size:clamp(13px,1.15vw,16px);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 2.2vh}
+.eyebrow b{color:var(--amber);font-weight:500}
+h1,h2{font-family:var(--display);font-weight:500;letter-spacing:-.02em;line-height:1.02;margin:0;text-wrap:balance;font-variation-settings:"opsz" 96}
+h1{font-size:clamp(40px,6.4vw,104px)}
+h2{font-size:clamp(30px,4.4vw,72px)}
+.lead{font-size:clamp(20px,1.85vw,30px);line-height:1.45;color:var(--muted);max-width:32em;margin:2.4vh 0 0;text-wrap:pretty}
+.lead strong{color:var(--ink);font-weight:400}
+.big{font-family:var(--display);font-weight:600;letter-spacing:-.035em;line-height:.95;font-size:clamp(72px,13vw,220px);font-variation-settings:"opsz" 96;font-variant-numeric:tabular-nums}
+.big.amber,.amber{color:var(--amber)}
+.mono{font-family:var(--mono)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.cap{font-family:var(--mono);font-size:13px;color:var(--muted);opacity:.8;letter-spacing:.04em;position:absolute;left:7vw;bottom:7vh;max-width:70vw;line-height:1.4}
+.quote{font-family:var(--display);font-weight:400;font-size:clamp(28px,4vw,64px);line-height:1.12;letter-spacing:-.015em;text-wrap:balance;margin:0}
+.quote .q{color:var(--amber)}
+.attrib{font-family:var(--mono);font-size:clamp(14px,1.2vw,18px);color:var(--muted);margin-top:3vh;letter-spacing:.04em}
+.row{display:flex;gap:4vw;align-items:flex-start}
+.col{flex:1;min-width:0}
+.hr{height:1px;background:var(--line);margin:3vh 0}
+
+/* ---------- cv ---------- */
+.cv{list-style:none;margin:1vh 0 0;padding:0;max-width:60em}
+.cv li{display:grid;grid-template-columns:7em 1fr;gap:2vw;align-items:baseline;padding:2.2vh 0;border-top:1px solid var(--line);font-size:clamp(20px,2vw,32px);line-height:1.3;color:var(--muted)}
+.cv li:last-child{border-bottom:1px solid var(--line)}
+.cv li b{color:var(--ink);font-weight:500}
+.cv .k{font-family:var(--mono);font-size:.55em;letter-spacing:.12em;text-transform:uppercase;color:var(--amber)}
+
+/* ---------- beats ---------- */
+[data-beat]{opacity:0;transform:translateY(14px);transition:opacity .6s var(--ease),transform .7s var(--ease)}
+[data-beat].on{opacity:1;transform:none}
+.scene.active .fade{animation:fadeup .8s var(--ease) both}
+@keyframes fadeup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.d1{animation-delay:.15s}.d2{animation-delay:.3s}.d3{animation-delay:.45s}.d4{animation-delay:.6s}.d5{animation-delay:.75s}
+
+/* ---------- chrome ---------- */
+#progress{position:fixed;top:0;left:0;height:2px;background:var(--amber);width:0;transition:width .5s var(--ease);z-index:20}
+#hud{position:fixed;right:2.2vw;bottom:2.4vh;font-family:var(--mono);font-size:13px;color:var(--muted);letter-spacing:.08em;z-index:20;display:flex;gap:18px;align-items:center}
+#hud .chip{border:1px solid var(--line);padding:3px 8px;border-radius:2px;color:var(--muted)}
+#hud .chip.uk{border-color:var(--amber2);color:var(--amber)}
+#notes{position:fixed;top:0;right:0;height:100%;width:min(460px,42vw);background:var(--bg2);border-left:1px solid var(--line);padding:4vh 2.4vw;overflow:auto;transform:translateX(100%);transition:transform .35s var(--ease);z-index:30;font-size:17px;line-height:1.6;color:#D8D4CB}
+#notes.open{transform:none}
+#notes h4{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin:0 0 1.5vh;font-weight:500}
+#notes p{margin:0 0 1.2em}
+#notes em{color:var(--ink);font-style:normal;font-weight:500}
+#help{position:fixed;left:2.2vw;bottom:2.4vh;font-family:var(--mono);font-size:13px;color:var(--muted);letter-spacing:.04em;z-index:20;opacity:.9}
+#help kbd{color:var(--ink)}
+.notes{display:none}
+body.free .notes{display:block;margin-top:4vh;padding:2vh 2vw;border-left:2px solid var(--amber2);color:#CFCBC2;font-size:15px;line-height:1.55;max-width:60ch}
+body.free #hud,body.free #help,body.free #progress{display:none}
+.trk{display:none}
+.trk.show{display:block}
+span.trk.show{display:inline}
+
+/* ---------- scene 1: cursor ---------- */
+.term{font-family:var(--mono);font-size:clamp(20px,2.6vw,38px);line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.term .p{color:var(--amber)}
+.term .ans{color:var(--ink)}
+.cursor{display:inline-block;width:.55em;height:1.05em;background:var(--amber);vertical-align:-.15em;margin-left:2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.wh{position:absolute;right:7vw;bottom:8vh;font-family:var(--mono);font-size:clamp(16px,1.4vw,22px);color:var(--amber);letter-spacing:.08em;opacity:0;transition:opacity 1.2s}
+.wh.on{opacity:1}
+
+/* ---------- journey line ---------- */
+.journey{width:100%;height:auto;overflow:visible}
+.journey .path{stroke:var(--amber);stroke-width:2;fill:none;stroke-dasharray:2000;stroke-dashoffset:2000;transition:stroke-dashoffset 3.2s var(--ease)}
+.on .journey .path,.scene.active .journey.go .path{stroke-dashoffset:0}
+.journey .node{fill:var(--bg);stroke:var(--amber);stroke-width:2;opacity:0;transition:opacity .4s}
+.journey .lbl{fill:var(--muted);font-family:var(--mono);font-size:19px;letter-spacing:.06em;opacity:0;transition:opacity .5s}
+.journey.go .node,.journey.go .lbl{opacity:1}
+.journey .node.pulse{animation:pulse 1.2s var(--ease) 1}
+@keyframes pulse{0%{r:6}40%{r:14}100%{r:6}}
+
+/* ---------- charts ---------- */
+svg text{font-family:var(--mono);fill:var(--muted);font-size:18px;letter-spacing:.03em}
+svg .axis{stroke:var(--line);stroke-width:1}
+svg .bar{fill:var(--faint)}
+svg .bar.amber{fill:var(--amber)}
+svg .bar.ink{fill:var(--ink)}
+svg .val{fill:var(--ink);font-size:21px;font-weight:500}
+svg .val.amber{fill:var(--amber)}
+svg .lbl{fill:var(--muted)}
+svg .line{fill:none;stroke:var(--amber);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+svg .line.ink{stroke:var(--ink);stroke-width:2}
+svg .line.dim{stroke:var(--faint);stroke-width:2;stroke-dasharray:6 6}
+svg .area{fill:var(--amber-dim)}
+svg .dot{fill:var(--amber)}
+svg .grid{stroke:var(--line);stroke-dasharray:2 5}
+.chart{width:100%;height:auto;display:block}
+
+/* ---------- ladder ---------- */
+.ladder{display:flex;flex-direction:column-reverse;gap:1.6vh;max-width:56em}
+.rung{display:grid;grid-template-columns:1.6em 12em 1fr;gap:2vw;align-items:baseline;padding:1.6vh 0;border-top:1px solid var(--line)}
+.rung .n{font-family:var(--mono);color:var(--muted);font-size:16px}
+.rung .t{font-family:var(--display);font-size:clamp(24px,2.6vw,40px);font-weight:500;letter-spacing:-.02em}
+.rung .d{color:var(--muted);font-size:clamp(16px,1.4vw,21px);line-height:1.4}
+.rung .d em{color:var(--amber);font-style:normal}
+.rung .t{color:var(--muted)}.rung.cur .t{color:var(--ink)}
+.rung[data-beat]:not(.on){display:none}
+
+/* ---------- next token ---------- */
+.tok{font-family:var(--mono);font-size:clamp(24px,3.4vw,52px);line-height:1.4}
+.tok .blank{display:inline-block;min-width:4.2em;border-bottom:3px solid var(--amber);color:var(--amber)}
+.probs{margin-top:4vh;display:grid;grid-template-columns:8em 1fr 4em;gap:1.6vh 2vw;align-items:center;max-width:44em;font-family:var(--mono);font-size:clamp(16px,1.5vw,22px)}
+.probs .w{color:var(--ink)}.probs .bar{height:10px;background:var(--faint);transform-origin:left;transform:scaleX(0);transition:transform .8s var(--ease)}
+.probs .bar.win{background:var(--amber)}
+.probs .pc{color:var(--muted);text-align:right}
+.probs.go .bar{transform:none}
+
+/* ---------- furnace/tap + two-bar ---------- */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:5vw;align-items:start}
+.icon{width:min(200px,16vw);height:min(200px,16vw);margin-bottom:2vh;overflow:visible}
+.furnace .f1{transform-origin:60px 92px;animation:flick 1.1s ease-in-out infinite alternate}
+.furnace .f2{transform-origin:60px 90px;animation:flick .8s ease-in-out infinite alternate-reverse}
+.furnace .f3{transform-origin:60px 88px;animation:flick .6s ease-in-out infinite alternate}
+@keyframes flick{from{transform:scale(1,1) skewX(-2deg)}to{transform:scale(1.06,1.12) skewX(3deg)}}
+.furnace .heat path{stroke-dasharray:14;animation:heat 1.6s linear infinite}
+.furnace .heat path:nth-child(2){animation-delay:.5s}.furnace .heat path:nth-child(3){animation-delay:1s}
+@keyframes heat{from{stroke-dashoffset:14;opacity:0}40%{opacity:.7}to{stroke-dashoffset:-14;opacity:0}}
+.tap .drops ellipse{animation:drip 1.5s cubic-bezier(.4,0,1,1) infinite;opacity:0}
+.tap .d2{animation-delay:.5s!important}.tap .d3{animation-delay:1s!important}
+@keyframes drip{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:1;transform:translateY(2px) scale(1)}85%{opacity:1}100%{transform:translateY(32px) scale(1,1.2);opacity:0}}
+.tap .stream{transform-origin:74px 72px;transform:scaleY(0);opacity:0;transition:transform 1.2s var(--ease),opacity .4s}
+.tap.flow .stream{transform:none;opacity:1}
+.tap.flow .drops{display:none}
+.tap.flow .pool{opacity:1;transition:opacity .8s 1s}
+.tapdrops{stroke:var(--amber);stroke-width:3;stroke-linecap:round;fill:none}
+.tt{font-family:var(--display);font-size:clamp(26px,3vw,46px);font-weight:500;letter-spacing:-.02em}
+.ts{color:var(--muted);font-family:var(--mono);font-size:clamp(14px,1.3vw,19px);margin-top:1vh;letter-spacing:.04em}
+
+/* ---------- agent orbit ---------- */
+.orbit{position:relative;width:min(54vh,600px);height:min(54vh,600px);margin:0 auto}
+.orbit .core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:26%;height:26%;border-radius:50%;border:1px solid var(--amber);display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:var(--display);font-size:clamp(16px,1.7vw,24px);font-weight:500;text-align:center;line-height:1.1;background:var(--bg)}
+.orbit .core small{font-family:var(--mono);color:var(--muted);font-size:12px;letter-spacing:.1em;margin-top:.5em;font-weight:400}
+.orbit .ring{position:absolute;inset:0;border-radius:50%;border:1px dashed var(--line);animation:spin 80s linear infinite}
+.orbit .sat{position:absolute;left:50%;top:50%;width:8em;margin-left:-4em;margin-top:-1.4em;text-align:center;font-family:var(--mono);font-size:clamp(14px,1.25vw,18px);letter-spacing:.04em;color:var(--ink);opacity:0;transition:opacity .5s}
+.orbit .sat small{display:block;color:var(--muted);letter-spacing:.02em;font-size:.86em;margin-top:.2em}
+.orbit .sat.on{opacity:1}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- stack ---------- */
+.stack{display:flex;flex-direction:column;gap:6px;max-width:44em;transition:transform 1s var(--ease)}
+.layer{display:flex;justify-content:space-between;align-items:baseline;padding:1.6vh 1.6vw;border:1px solid var(--line);font-family:var(--display);font-size:clamp(16px,1.9vw,28px);font-weight:500;letter-spacing:-.01em;transition:transform 1s var(--ease),background .6s,border-color .6s}
+.layer small{font-family:var(--mono);font-size:14px;color:var(--muted);letter-spacing:.04em;font-weight:400}
+.layer.energy{border-color:var(--amber);color:var(--amber);background:var(--amber-dim)}
+.layer .you{font-family:var(--mono);font-size:14px;color:var(--amber);letter-spacing:.08em}
+.stack.flip{flex-direction:column-reverse}
+
+/* ---------- campus ---------- */
+.eq{list-style:none;margin:3vh 0 0;padding:0;font-size:clamp(16px,1.45vw,22px);line-height:1.35;color:var(--muted)}
+.eq li{padding:1.2vh 0;border-top:1px solid var(--line)}
+.eq li b{color:var(--amber);font-weight:500;font-family:var(--display);font-size:1.25em;margin-right:.3em}
+.campus{display:block;overflow:visible}
+.campus .face{stroke:#3a3934;stroke-width:1;stroke-linejoin:round}
+.campus .top{fill:#1c1c20}.campus .left{fill:#121215}.campus .right{fill:#0e0e10}
+.campus .ground{fill:none;stroke:#1f1f23;stroke-width:1}
+.campus .road{fill:#141417;stroke:none}
+.campus .wire{fill:none;stroke:var(--amber);stroke-width:1.2;opacity:.9}
+.campus .feed{fill:none;stroke:var(--amber2);stroke-width:1.2;stroke-dasharray:4 5}
+.campus .pylon{fill:none;stroke:#8b877e;stroke-width:1.2}
+.campus .glow{transition:opacity 1s}
+.campus .draw{stroke-dasharray:2400;stroke-dashoffset:2400;transition:stroke-dashoffset 2.6s var(--ease)}
+.campus.go .draw{stroke-dashoffset:0}
+.campus .spark{fill:var(--amber)}
+
+/* ---------- rack ---------- */
+.rackwrap{display:grid;grid-template-columns:auto 1fr;gap:5vw;align-items:end}
+.rack{width:min(120px,10vw);height:min(360px,46vh);border:1px solid var(--muted);position:relative;display:flex;flex-direction:column;gap:3px;padding:6px}
+.rack i{display:block;height:100%;background:var(--faint);transition:background .4s}
+.homes{display:flex;flex-wrap:wrap;gap:5px;max-width:600px;margin-top:2vh;min-height:60px}
+.homes b{width:12px;height:12px;background:var(--amber);display:block;opacity:0;transform:scale(.4);transition:opacity .25s,transform .25s}
+.homes b.on{opacity:1;transform:none}
+.step{font-family:var(--mono);color:var(--muted);font-size:clamp(15px,1.35vw,20px);letter-spacing:.06em;margin-top:1.4vh}
+
+/* ---------- thermal ---------- */
+.therm{width:min(120px,10vw);height:min(360px,46vh);border:1px solid var(--muted);background:linear-gradient(180deg,#2b3a6b,#1b2a5e);position:relative;overflow:hidden}
+.therm:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#fff7e0,#F5A623 40%,#b8371a);opacity:0;transition:opacity 3s var(--ease)}
+.therm.hot:after{opacity:1}
+.pue{font-family:var(--mono);font-size:clamp(16px,1.6vw,24px);color:var(--muted);margin-top:2vh}
+.pue b{color:var(--amber);font-weight:500}
+
+/* ---------- lead-time bars ---------- */
+.lt{display:grid;grid-template-columns:12em 1fr;gap:3vh 3vw;align-items:end;font-family:var(--mono);font-size:clamp(16px,1.5vw,22px)}
+.lt .k{color:var(--ink);padding-bottom:2px}
+.lt .b{position:relative;height:14px;background:var(--line);margin-top:2.2em}
+.lt .b i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--amber)}
+.lt .b i.snap{transition:width .25s var(--ease)}
+.lt .b i.crawl{transition:width 6s linear}
+.lt .v{position:absolute;left:0;top:-1.9em;color:var(--muted);white-space:nowrap;font-size:.85em}
+
+/* ---------- inversion ---------- */
+.swap{position:relative;height:1.25em;overflow:hidden;font-size:clamp(28px,3.6vw,58px);white-space:nowrap}
+.swap>span{position:absolute;left:0;top:0;transition:transform 1.1s var(--ease),opacity .8s}
+.swap .b{transform:translateY(120%)}
+.swap.go .a{transform:translateY(-120%);opacity:.15}
+.swap.go .b{transform:none}
+.const{position:relative;width:100%;height:min(46vh,420px);margin-top:3vh}
+.const .c{position:absolute;transform:translate(-50%,-50%);border-radius:50%;background:var(--amber);opacity:0;transition:opacity .8s,transform .8s var(--ease)}
+.const .c.on{opacity:.85}
+.const .c span{position:absolute;left:calc(100% + 12px);top:50%;transform:translateY(-50%);white-space:nowrap;font-family:var(--mono);font-size:15px;line-height:1.35;color:var(--muted);letter-spacing:.06em}
+.const .c span b{color:var(--ink);font-weight:500}
+
+/* ---------- ENGIE stats / KPI ---------- */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:4vw;border-top:1px solid var(--line);padding-top:3vh}
+.kpi .v{font-family:var(--display);font-weight:600;font-size:clamp(48px,7vw,120px);letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums}
+.kpi .l{color:var(--muted);margin-top:1.4vh;font-size:clamp(16px,1.4vw,21px);line-height:1.4;max-width:18em}
+
+/* ---------- jevons ---------- */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:6vw;align-items:center}
+.pulseA{animation:shrink 3s var(--ease) infinite alternate}
+.pulseB{animation:grow 3s var(--ease) infinite alternate}
+@keyframes shrink{to{transform:scale(.86);opacity:.7}}
+@keyframes grow{to{transform:scale(1.08)}}
+
+/* ---------- moats ---------- */
+.moats{display:grid;grid-template-columns:repeat(3,1fr);gap:3vw}
+.moat{border-top:1px solid var(--line);padding-top:2.4vh}
+.moat svg{width:64px;height:64px;display:block;margin-bottom:2vh}
+.moat h3{font-family:var(--display);font-size:clamp(24px,2.6vw,40px);font-weight:500;margin:0;letter-spacing:-.02em}
+.moat p{color:var(--muted);font-size:clamp(16px,1.45vw,22px);line-height:1.45;margin:1vh 0 0}
+
+/* ---------- transcript ---------- */
+.tr{font-family:var(--mono);font-size:clamp(16px,1.6vw,24px);line-height:1.7;max-width:46em}
+.tr .u{color:var(--amber)}
+.tr .s{color:#C4BFB5}
+.tr .r{color:var(--ink);font-weight:500}
+.tr div{opacity:0;transform:translateY(6px);transition:opacity .4s,transform .5s var(--ease)}
+.tr div.on{opacity:1;transform:none}
+
+/* ---------- axes columns ---------- */
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:3vw}
+.colx{border-top:1px solid var(--line);padding-top:2vh}
+.colx h3{font-family:var(--mono);font-size:14px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 1.6vh;font-weight:500}
+.colx.new h3{color:var(--amber)}
+.colx h4{font-family:var(--display);font-size:clamp(20px,2.2vw,34px);font-weight:500;margin:0 0 1.4vh;letter-spacing:-.02em}
+.colx ul{list-style:none;margin:0;padding:0;color:#C4BFB5;font-size:clamp(15px,1.35vw,20px);line-height:1.5}
+.colx li{padding:.35em 0;border-top:1px dashed var(--line)}
+
+/* ---------- sources ---------- */
+.src{columns:2;column-gap:4vw;font-family:var(--mono);font-size:14px;line-height:1.6;color:var(--muted)}
+.src p{margin:0 0 .6em;break-inside:avoid}
+
+canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+@media (max-width:820px){
+  .row,.duo,.two,.rackwrap{grid-template-columns:1fr;flex-direction:column}
+  .kpis,.moats,.cols{grid-template-columns:1fr;gap:3vh}
+  .src{columns:1}
+  .scene{padding:5vh 6vw}
+  #notes{width:100vw}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation-duration:.001s!important;transition-duration:.001s!important}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="stage">
+
+<!-- ================= ACT 0 ================= -->
+<section class="scene" id="s1" data-anim="cursor" data-beats="0">
+  <div class="wrap">
+    <div class="term"><span class="p">&gt; </span><span id="t1q"></span><span id="t1a" class="ans"></span><span class="cursor" id="t1c"></span></div>
+  </div>
+  <div class="wh" id="t1wh">0.3 Wh</div>
+</section>
+
+<section class="scene" id="s2" data-anim="journey" data-beats="0">
+  <div class="wrap">
+    <p class="eyebrow fade">Two seconds</p>
+    <h1 class="fade d1">Here is what just happened.</h1>
+    <svg class="journey" id="j1" viewBox="0 0 1180 200" style="margin-top:6vh">
+      <path class="path" d="M20 120 H1160"/>
+      <g class="nodes"></g>
+    </svg>
+  </div>
+</section>
+
+<section class="scene" id="s3b" data-anim="capex" data-beats="1">
+  <div class="wrap">
+    <p class="eyebrow fade">The biggest bet in the history of technology</p>
+    <div id="capexA">
+      <h2 class="fade d1">Big-four capex, 2019 → 2026</h2>
+      <svg class="chart" id="capexLine" viewBox="0 0 1180 420" style="margin-top:3vh"></svg>
+    </div>
+    <div id="capexB" style="display:none">
+      <h2>Spend per year, 2025 dollars.</h2>
+      <svg class="chart" id="capexBars" viewBox="0 0 1180 440" style="margin-top:3vh"></svg>
+    </div>
+  </div>
+  <div class="cap">Platformonomics · TrueUp · Epoch AI · Goldman Sachs (Aug 2026) · Planetary Society · Guinness · Sparkline. Programme totals in 2025 USD, ±10%.</div>
+</section>
+
+<!-- ================= ACT 1 ================= -->
+<section class="scene" id="s5" data-anim="token" data-beats="2">
+  <div class="wrap">
+    <p class="eyebrow fade">What AI actually is · one token</p>
+    <div class="tok fade d1" id="tokline">The price of power tonight will <span class="blank" id="tokblank">&nbsp;</span></div>
+    <div class="probs" id="probs">
+      <span class="w">rise</span><span class="bar win" style="width:62%"></span><span class="pc">41%</span>
+      <span class="w">fall</span><span class="bar" style="width:38%"></span><span class="pc">25%</span>
+      <span class="w">spike</span><span class="bar" style="width:24%"></span><span class="pc">16%</span>
+    </div>
+    <div data-beat="1" style="margin-top:4vh">
+      <svg class="chart" id="wgrid" viewBox="0 0 1180 150" style="max-width:900px"></svg>
+      <p class="lead" style="margin-top:1.5vh">To pick that one word, the model runs every one of its <strong>~1,000,000,000,000 parameters</strong> — about <strong id="ops">2 trillion</strong> operations. One token.</p>
+    </div>
+    <p class="lead" data-beat="2"><strong>× 500 tokens</strong> for a normal answer. <strong>× 10,000+</strong> when a reasoning model thinks, or an agent works.</p>
+  </div>
+  <div class="cap">Frontier models ~10¹² parameters (dense-equivalent); ~2 FLOPs per parameter per token (Kaplan et al., 2020).</div>
+</section>
+
+<section class="scene" id="s5b" data-anim="memwall" data-beats="2">
+  <div class="wrap">
+    <p class="eyebrow fade">Why it eats power</p>
+    <h2 class="fade d1">The arithmetic is cheap.<br>Moving the weights is not.</h2>
+    <svg class="chart" id="mw" viewBox="0 0 1180 230" style="margin-top:3vh;max-width:1000px"></svg>
+    <p class="lead" data-beat="1">Inside an AI accelerator, <strong>moving data is ~47% of the energy; the multiplies are ~8%</strong>. And every token moves the whole model — a trillion numbers, out of memory, through the chip, and back. That is why racks became 200 kW of memory and interconnect around the GPUs.</p>
+    <p class="lead" data-beat="2">Energy per token falls ~10× a year. <strong>Tokens per answer rise faster.</strong></p>
+  </div>
+  <div class="cap">MAC: Google TPU, 7 nm, BF16 0.32 pJ (Jouppi et al., 2021). HBM: ~4 pJ/bit at the stack (NVIDIA, MICRO 2017); ~12 pJ/bit effective on an H100 system (2026 calibration) → the real gap is ~400×. Energy split: Dally, NVIDIA, Hot Chips 2023.</div>
+</section>
+
+
+<section class="scene" id="s6" data-anim="tokens" data-beats="1">
+  <div class="wrap">
+    <p class="eyebrow fade">Training vs inference</p>
+    <div id="s6a" class="duo">
+      <div class="fade d1">
+        <svg class="icon furnace" viewBox="0 0 120 120">
+          <defs><linearGradient id="fgl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#F5A623"/><stop offset="1" stop-color="#F5A623" stop-opacity="0"/></linearGradient></defs>
+          <rect x="18" y="26" width="84" height="72" rx="4" fill="none" stroke="var(--ink)" stroke-width="2"/>
+          <path d="M18 26 h84" stroke="var(--ink)" stroke-width="2"/><path d="M34 26 v-14 h12 v14 M74 26 v-14 h12 v14" fill="none" stroke="var(--ink)" stroke-width="2"/>
+          <path d="M38 98 V64 a22 22 0 0 1 44 0 V98 Z" fill="#000" stroke="var(--amber)" stroke-width="2"/>
+          <g class="flames">
+            <path class="f1" d="M60 92 C46 84 44 70 52 60 C53 68 57 70 58 66 C60 58 66 56 66 48 C74 58 78 74 68 86 C66 90 63 92 60 92 Z" fill="var(--amber)"/>
+            <path class="f2" d="M60 90 C52 84 52 74 57 68 C58 73 61 74 62 70 C64 66 65 64 65 60 C70 68 70 80 64 87 C63 89 61 90 60 90 Z" fill="#FFD27A"/>
+            <path class="f3" d="M60 88 C56 84 56 78 59 74 C60 77 61 78 62 76 C64 80 64 84 62 87 C61 88 60 88 60 88 Z" fill="#FFF3D6"/>
+          </g>
+          <rect x="38" y="70" width="44" height="28" fill="url(#fgl)" opacity=".35"/>
+          <g class="heat" stroke="var(--amber)" stroke-width="1.5" fill="none" opacity=".6"><path d="M40 20 c3 -4 3 -8 0 -12"/><path d="M60 22 c3 -4 3 -8 0 -12"/><path d="M80 20 c3 -4 3 -8 0 -12"/></g>
+        </svg>
+        <div class="tt">Train</div><div class="ts">months · gigawatts · once</div>
+      </div>
+      <div class="fade d2">
+        <svg class="icon tap" viewBox="0 0 120 120">
+          <path d="M14 46 h16 v-8 h26 a18 18 0 0 1 18 18 v10" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M8 46 v-10 h6 v10 z" fill="var(--ink)"/>
+          <path d="M44 38 v-10 h-8 v-4 h28 v4 h-8 v10" fill="none" stroke="var(--ink)" stroke-width="2"/>
+          <rect x="66" y="66" width="16" height="6" fill="var(--ink)"/>
+          <g class="drops" fill="var(--amber)">
+            <ellipse class="d1" cx="74" cy="80" rx="3.2" ry="4.4"/>
+            <ellipse class="d2" cx="74" cy="80" rx="3.2" ry="4.4"/>
+            <ellipse class="d3" cx="74" cy="80" rx="3.2" ry="4.4"/>
+          </g>
+          <path class="stream" d="M71 72 h6 v40 h-6 z" fill="var(--amber)"/>
+          <path class="pool" d="M40 112 h68" stroke="var(--amber)" stroke-width="2" stroke-linecap="round" opacity="0"/>
+        </svg>
+        <div class="tt">Infer</div><div class="ts">milliseconds · watts · billions of times a day</div>
+      </div>
+    </div>
+    <div id="s6b" style="display:none">
+      <h2>Google, tokens per month</h2>
+      <svg class="chart" id="tokChart" viewBox="0 0 1180 440" style="margin-top:2vh"></svg>
+    </div>
+  </div>
+  <div class="cap">Google I/O, May 2026 · Alphabet Q2 2026 call</div>
+</section>
+
+<section class="scene" id="s6b" data-anim="" data-beats="3">
+  <div class="wrap">
+    <p class="eyebrow fade">What comes next · continual learning</p>
+    <h2 class="fade d1">Today the model is frozen after training.<br>Tomorrow it never stops learning.</h2>
+    <div class="cols" style="margin-top:4vh">
+      <div class="colx" data-beat="1"><h3>Load</h3><h4>Training becomes baseload</h4><ul><li>A one-off, gigawatt-class event turns into a permanent one</li><li>Synchronous, flat, 24/7 — the opposite of today's diurnal inference curve</li></ul></div>
+      <div class="colx" data-beat="2"><h3>Flexibility</h3><h4>The flex band shrinks</h4><ul><li>Today's demand response works by pausing training jobs</li><li>A model that must keep learning pauses less freely — price the optionality before it disappears</li></ul></div>
+      <div class="colx new" data-beat="3"><h3>Location</h3><h4>Learning tolerates latency</h4><ul><li>It runs wherever power is cheapest and permitted — the most mobile load ever built</li><li>It learns from the data flowing through it: your proprietary flow becomes the moat</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="scene center" id="s7" data-anim="orbit" data-beats="0">
+  <div class="wrap">
+    <div class="orbit">
+      <div class="ring"></div>
+      <div class="core">Agent<small>THE ORCHESTRATOR</small></div>
+      <div class="sat" data-a="0">Prompt<small>text · voice · image</small></div>
+      <div class="sat" data-a="45">Memory<small>persistent context</small></div>
+      <div class="sat" data-a="90">Models<small>rented, swappable</small></div>
+      <div class="sat" data-a="135">Files<small>read · write · parse</small></div>
+      <div class="sat" data-a="180">Sub-agents<small>spawn · coordinate</small></div>
+      <div class="sat" data-a="225">Computer use<small>browse · click · type</small></div>
+      <div class="sat" data-a="270">Tools<small>APIs · MCP · CLI</small></div>
+      <div class="sat" data-a="315">Skills<small>custom · community</small></div>
+    </div>
+    <p class="quote fade d3" style="margin-top:3vh;font-size:clamp(22px,2.6vw,40px)">“A chatbot answers. <span class="q">An agent acts.</span>”</p>
+    <p class="attrib fade d4">Jensen Huang, GTC 2026</p>
+  </div>
+</section>
+
+<section class="scene" id="s8" data-anim="stack" data-beats="1">
+  <div class="wrap">
+    <p class="eyebrow fade">The stack</p>
+    <div class="stack fade d1" id="stack">
+      <div class="layer">Applications <span class="you" id="youtop">← you work here</span></div>
+      <div class="layer">Foundation models <small>GPT · Claude · Gemini · Grok · DeepSeek</small></div>
+      <div class="layer">Cloud <small>AWS · Azure · Google Cloud · Oracle</small></div>
+      <div class="layer">Data centres <small>power · cooling · optics · mechanics</small></div>
+      <div class="layer">Semiconductors <small>NVIDIA · TSMC · ASML · SK hynix</small></div>
+      <div class="layer energy">Energy <span class="you" id="youbot" style="opacity:0">← you work here</span></div>
+    </div>
+    <p class="lead" data-beat="1"><strong>No electrons, no AI.</strong> The bottom is where the constraint moved.</p>
+  </div>
+</section>
+
+<!-- ================= ACT 2 ================= -->
+<section class="scene" id="s9" data-anim="campus" data-beats="4">
+  <div class="wrap">
+    <div style="display:grid;grid-template-columns:minmax(16em,31%) 1fr;gap:2vw;align-items:center">
+      <div>
+        <p class="eyebrow fade">The building</p>
+        <div class="big amber fade d1" style="white-space:nowrap;font-size:clamp(64px,8.5vw,140px)">1 GW</div>
+        <p class="lead fade d2" style="max-width:16em">One campus. Eight halls of 125 MW, each the size of three football pitches.</p>
+        <ul class="eq">
+          <li data-beat="1"><b>one</b> nuclear reactor, running flat out, for one customer</li>
+          <li data-beat="2"><b>a million</b> homes</li>
+          <li data-beat="3"><b>~700</b> offshore wind turbines to feed it around the clock</li>
+          <li data-beat="4"><b>2%</b> of Britain's peak demand — in one postcode</li>
+        </ul>
+      </div>
+      <svg class="campus" id="campus" viewBox="0 0 1100 560" style="width:100%;max-height:74vh"></svg>
+    </div>
+  </div>
+  <div class="cap">Epoch AI, Sept 2026 (±40%) · Fortune, Mar 2026 · Epoch AI "AI energy", Jul 2026</div>
+</section>
+
+<section class="scene" id="s11" data-anim="rack" data-beats="3">
+  <div class="wrap">
+    <p class="eyebrow fade">The rack</p>
+    <div class="rackwrap">
+      <div class="rack fade d1" id="rack"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div>
+        <div class="big" id="rackkw">40 kW</div>
+        <div class="step" id="rackgen">H100 · 2023</div>
+        <div class="homes" id="homes"></div>
+        <div class="step" id="homeslbl" style="opacity:0"></div>
+      </div>
+    </div>
+  </div>
+  <div class="cap">SemiAnalysis, Feb 2026 · Tom's Hardware · Uptime Institute. Homes: annual energy, ~2,700 kWh/home (Ofgem TDCV).</div>
+</section>
+
+<section class="scene" id="s12" data-anim="thermal" data-beats="1">
+  <div class="wrap">
+    <div class="row">
+      <div class="therm fade d1" id="therm"></div>
+      <div class="col" style="padding-left:2vw">
+        <p class="eyebrow fade">Cooling · already solved at the frontier</p>
+        <h2 class="fade d1">The building is done.<br>The load is the chips.</h2>
+        <div style="display:flex;gap:5vw;align-items:baseline;margin-top:4vh" class="fade d2">
+          <div><div class="big amber" style="font-size:clamp(48px,6.5vw,110px)" id="pue">+58%</div><div class="step">overhead at the best sites · PUE 1.09</div></div>
+          <div><div class="big" style="font-size:clamp(48px,6.5vw,110px);color:var(--muted)">+58%</div><div class="step">global average · PUE 1.58</div></div>
+        </div>
+        <p class="lead" data-beat="1" style="margin-top:4vh"><strong>Nothing left to save downstream of the meter.</strong> The growth in the forecast is real — and it is all silicon.</p>
+      </div>
+    </div>
+  </div>
+  <div class="cap">Google fleet PUE 1.09 (2025) · Uptime Institute global survey (average). PUE = total site electricity ÷ chip electricity.</div>
+</section>
+
+<section class="scene" id="e1" data-track="uk" data-anim="" data-beats="2">
+  <div class="wrap">
+    <p class="eyebrow fade"><b>Extension</b> · Cooling & water</p>
+    <h2 class="fade d1">Direct-to-chip. Immersion. And the fight nobody planned for.</h2>
+    <p class="lead" data-beat="1"><strong>0.26 ml</strong> of water per median prompt — trivial per query, a licence-to-operate question per campus.</p>
+    <p class="lead" data-beat="2">The London trial you'll see in a minute is a data centre that behaves like a battery. The next fight is whether it also behaves like a good neighbour.</p>
+  </div>
+  <div class="cap">Google, Aug 2025 · NVIDIA / Emerald AI case study</div>
+</section>
+
+<section class="scene" id="s13" data-anim="cursor2" data-beats="3">
+  <div class="wrap">
+    <div class="term"><span class="p">&gt; </span><span id="t2q"></span><span id="t2a" class="ans"></span></div>
+    <div style="margin-top:6vh;font-family:var(--mono);font-size:clamp(16px,2vw,30px);line-height:1.6">
+      <div class="fade d3"><span class="amber">0.3 Wh</span> <span style="color:var(--muted)">· 1 prompt</span></div>
+      <div data-beat="1"><span style="color:var(--muted)">×</span> <span id="odo">3,200,000,000,000,000</span> <span style="color:var(--muted)">tokens a month · Google alone</span></div>
+      <div data-beat="2"><span style="color:var(--muted)">×</span> <span class="amber">agents</span></div>
+      <div data-beat="3" style="margin-top:2.5vh;padding-top:2.5vh;border-top:1px solid var(--line)"><span style="color:var(--muted)">=</span> <span class="amber" style="font-family:var(--display);font-weight:600;font-size:1.9em;letter-spacing:-.02em" id="twhres">42 TWh</span> <span style="color:var(--muted)">a year · Google's data centres, 2025 · +37%</span></div>
+      <div data-beat="3" style="margin-top:1vh;color:var(--ink)">More electricity than the whole of Ireland.</div>
+    </div>
+  </div>
+  <div class="cap">Google, Aug 2025 (0.24 Wh median prompt) · Altman, Jun 2025 (0.34 Wh) · Google I/O, May 2026 · Google 2026 Environmental Report (42 TWh, +37%) · Ireland ~33 TWh/yr (CSO)</div>
+</section>
+
+<!-- ================= ACT 3 ================= -->
+<section class="scene" id="s14" data-anim="twh" data-beats="0">
+  <div class="wrap">
+    <p class="eyebrow fade">Power · the raw material of intelligence</p>
+    <h2 class="fade d1">Data-centre electricity, world</h2>
+    <svg class="chart" id="twh" viewBox="0 0 1180 400" style="margin-top:3vh"></svg>
+    <p class="lead trk uk" style="margin-top:2vh">GB: <strong>5.2 GW</strong> connected · <strong>~20 TWh/yr</strong> by 2030 · <strong>72.8 GW</strong> of applications in the queue to 2039.</p>
+  </div>
+  <div class="cap">IEA Energy and AI (2025) · IEA Key Questions on Energy and AI (Apr 2026) · Ember · CSO Ireland · NESO evidence to Parliament</div>
+</section>
+
+<section class="scene" id="s16" data-anim="typeq" data-beats="1">
+  <div class="wrap">
+    <p class="quote" id="q16"></p>
+    <p class="attrib fade d5">Satya Nadella, November 2025</p>
+    <p class="lead" data-beat="1" style="margin-top:5vh">Musk, August 2026: <strong>~15 GW</strong> of AI compute planned for 2027 cannot be powered on.</p>
+  </div>
+</section>
+
+<section class="scene" id="s17" data-anim="leadtime" data-beats="0">
+  <div class="wrap">
+    <p class="eyebrow fade">Why you can't ship a megawatt</p>
+    <h2 class="fade d1">Lead times</h2>
+    <div class="lt" style="margin-top:5vh" id="lt">
+      <span class="k">GPU</span><div class="b"><i class="snap" data-w="3"></i><span class="v">weeks</span></div>
+      <span class="k">Transformer</span><div class="b"><i class="crawl" data-w="40"></i><span class="v">up to 4 years</span></div>
+      <span class="k">Gas turbine</span><div class="b"><i class="crawl" data-w="55"></i><span class="v">sold out to 2030 · GE Vernova 116 GW · Siemens Energy 69 GW</span></div>
+      <span class="k">Grid connection</span><div class="b"><i class="crawl" data-w="100"></i><span class="v">5–10+ years</span></div>
+    </div>
+    <p class="lead trk em" style="margin-top:4vh">US queue, 2025: gas requests <strong>+86%</strong>; solar, wind and storage requests fell.</p>
+    <p class="lead trk uk" style="margin-top:4vh">Stargate UK, <strong>paused</strong> April 2026 — “the cost of energy”. GB demand queue: <strong>41 → 125 GW</strong> in seven months, against a 45 GW peak.</p>
+  </div>
+  <div class="cap">pv magazine, May 2026 · GE Vernova / Siemens Energy Q2 2026 · LBNL Queued Up 2026 · Ofgem / NESO via The Register, Feb 2026 · TechRadar, Apr 2026</div>
+</section>
+
+<section class="scene" id="s17b" data-anim="phantom" data-beats="2">
+  <div class="wrap">
+    <p class="eyebrow fade">Phantom load</p>
+    <div class="big amber fade d1" id="pjm">$0bn</div>
+    <p class="lead fade d2">PJM capacity auction, 2027/28 — a record. The market monitor attributes <strong>40%</strong> of it to data centres…</p>
+    <p class="lead" data-beat="1">…and <strong>$6.2bn</strong> of that to data centres <strong>that do not exist yet</strong>. Wholesale cost in PJM: <strong>+75%</strong> year on year (Q1 2026). Retail bills: +1.5–5% from June.</p>
+    <p class="lead trk uk" data-beat="1" style="margin-top:1vh">GB's version: a demand queue of <strong>125 GW</strong> against a <strong>45 GW</strong> peak.</p>
+    <p class="lead" data-beat="2"><strong>The forecast is already in the price.</strong> If the forecast is wrong, so is the price — in either direction.</p>
+  </div>
+  <div class="cap">PJM Independent Market Monitor via Utility Dive, Jan 2026 · The Register, May 2026 · Canary Media · Ofgem / NESO via The Register, Feb 2026</div>
+</section>
+
+<section class="scene" id="s17c" data-anim="consent" data-beats="2">
+  <div class="wrap">
+    <p class="eyebrow fade">The other queue · consent</p>
+    <div class="two" style="align-items:end">
+      <div>
+        <div class="big amber fade d1" id="opp">42%</div>
+        <div class="step fade d1">oppose a data centre near their home · US registered voters</div>
+      </div>
+      <svg class="chart fade d2" id="oppchart" viewBox="0 0 560 240"></svg>
+    </div>
+    <div style="font-size:clamp(16px,1.5vw,24px);line-height:1.4;color:var(--muted);max-width:44em">
+      <p data-beat="1" style="margin:2.5vh 0 0"><strong style="color:var(--ink);font-weight:400">$130bn</strong> of projects blocked or delayed in Q1 2026 alone · <strong style="color:var(--ink);font-weight:400">~95</strong> local moratoria this year · New York: one-year ban above 50 MW<span class="trk uk"> · Britain: <strong style="color:var(--ink);font-weight:400">20%</strong> support, <strong style="color:var(--ink);font-weight:400">48%</strong> oppose</span></p>
+
+      <p data-beat="2" style="margin:1.6vh 0 0"><strong style="color:var(--amber);font-weight:400">Voters are persuadable:</strong> shown the taxes, the jobs or the real numbers, net favourability moves <strong style="color:var(--ink);font-weight:400">+35 points</strong>. Nobody is showing them.</p>
+    </div>
+  </div>
+  <div class="cap">Heatmap / Embold Research, Aug 2025 – Aug 2026 (n=2,045, ±2.3) · Economist/YouGov, 28–31 Aug 2026 · Data Center Watch Q1 2026 · YouGov GB, May 2026 · Li, Ren et al. 2023 and 2026 revision · Google, Aug 2025 · Rainey Center, May 2026 (n=1,010) · Echelon Insights, Aug 2026</div>
+</section>
+
+<section class="scene" id="s17d" data-anim="water" data-beats="1">
+  <div class="wrap">
+    <p class="eyebrow fade">The belief that sticks</p>
+    <h2 class="fade d1">“A bottle of water per twenty queries.”</h2>
+    <p class="lead fade d2" style="max-width:44em">One modelled 2023 scenario, counting the power plant's water; its own authors revised it to ~15 ml; Google measures <strong>0.26 ml</strong>. The whole industry, in billion gallons a year:</p>
+    <svg class="chart" id="waterchart" viewBox="0 0 1180 270" style="margin-top:1.5vh"></svg>
+    <p class="lead" data-beat="1" style="margin-top:1.5vh"><strong>Every data centre in America, on site: a thirtieth of golf. A sixtieth of almonds.</strong> Nobody has told the voters.</p>
+  </div>
+  <div class="cap">Billion US gallons a year. Data centres: LBNL 2024 report (2023; on-site consumed; indirect = water consumed generating their electricity). Golf: GCSAA 2024 (applied). Almonds: Pacific Institute (applied). Lawns: EPA WaterSense (applied).</div>
+</section>
+
+<section class="scene" id="s18" data-anim="inversion" data-beats="1">
+  <div class="wrap">
+    <h1 class="swap" id="swap"><span class="a">For a century, power followed demand.</span><span class="b">Now demand follows <span class="amber">power.</span></span></h1>
+    <div class="const" id="const"></div>
+  </div>
+  <div class="cap">Constellation of announced campuses and power deals, sized by GW (Epoch AI, IEA, company filings; ±40%, announced ≠ energised)</div>
+</section>
+
+<section class="scene" id="e2" data-anim="" data-beats="2">
+  <div class="wrap">
+    <p class="eyebrow fade">The logical endpoint</p>
+    <h2 class="fade d1">If you can't bring the power to the compute — and can't get the permit — put the compute where nobody can object.</h2>
+    <p class="quote" data-beat="1" style="margin-top:4vh;font-size:clamp(20px,2.4vw,38px)">“New large-scale energy and infrastructure projects often take <span class="q">a decade or more</span> to complete due to myriad permitting requirements, rights of way and utility restrictions.” <span class="attrib" style="display:block">Starcloud white paper, on why orbit</span></p>
+    <p class="lead" data-beat="2" style="margin-top:3vh">Starcloud flew an H100 in November 2025. Google's Suncatcher launches two TPU satellites in 2027. SpaceX has filed for a million-satellite orbital data centre. Musk: <strong>“You're power constrained on Earth.”</strong></p>
+  </div>
+  <div class="cap">Starcloud white paper (2024) · NPR, Apr 2026 · Google Research, Nov 2025 · SpaceX FCC filing, Jan 2026 · SpaceX S-1, Apr 2026 ("may not achieve commercial viability")</div>
+</section>
+
+
+<section class="scene" id="s19" data-anim="flex" data-beats="0">
+  <div class="wrap">
+    <p class="eyebrow fade">The load is not dumb</p>
+    <div class="two">
+      <div class="fade d1"><div class="big amber" id="f1">−25%</div><div class="step">for 3 hours · Phoenix, Oracle / EPRI DCFlex</div></div>
+      <div class="fade d2"><div class="big amber" id="f2">−40%</div><div class="step">in under a minute · London, Nebius / Emerald AI</div></div>
+    </div>
+    <p class="lead fade d3 trk em" style="margin-top:5vh">A 1 GW campus with a 25% flex band is a <strong>250 MW battery-equivalent that never degrades</strong>. Who trades it? Who owns the optionality?</p>
+    <p class="lead fade d3 trk uk" style="margin-top:5vh">The customer of the decade is also a flexible asset — <strong>if you write the contract that way.</strong></p>
+  </div>
+  <div class="cap">Google, Mar 2026 (1 GW demand response, five utilities) · NVIDIA / Emerald AI case study · Duke University, Feb 2025</div>
+</section>
+
+<section class="scene" id="s20" data-anim="kpis" data-beats="0">
+  <div class="wrap">
+    <p class="eyebrow fade">ENGIE's own number · H1 2026</p>
+    <div class="kpis">
+      <div class="kpi fade d1"><div class="v amber"><span data-count="7">0</span> GW</div><div class="l">of PPAs with tech and data-centre customers</div></div>
+      <div class="kpi fade d2"><div class="v"><span data-count="7">0</span> GW</div><div class="l">co-siting pipeline, 4 GW at advanced stage</div></div>
+      <div class="kpi fade d3"><div class="v"><span data-count="47">0</span>%</div><div class="l">of the 50 TWh 2030 data-centre supply target already done</div></div>
+    </div>
+    <p class="lead fade d4 trk em" style="margin-top:4vh">Not whether ENGIE sells to AI. Whether the desks build what the AI buyer wants: <strong>firm shape · 24/7 matching · flex value · ten-year tenor · sub-hourly settlement.</strong></p>
+    <p class="lead fade d4 trk uk" style="margin-top:4vh">And in the UK: <strong>UK Power Networks</strong>, £10.5bn. The constraint the hyperscalers complain about is about to be an ENGIE asset.</p>
+  </div>
+  <div class="cap">ENGIE H1 2026 results, 31 Jul 2026 · DCD, Mar 2026</div>
+</section>
+
+<!-- ================= ACT 4 · JEVONS ================= -->
+<section class="scene" id="s21" data-anim="jevons" data-beats="0">
+  <div class="wrap">
+    <div class="two">
+      <div>
+        <p class="eyebrow fade">Jevons, 1865</p>
+        <h2 class="fade d1">Efficiency does not reduce consumption. It boosts it.</h2>
+        <p class="lead fade d2">Watt's condenser: <strong>−75%</strong> coal per unit of work. Britain's coal output, 1800 → 1865: <strong>×10</strong>.</p>
+      </div>
+      <svg class="chart" id="jev" viewBox="0 0 560 420"></svg>
+    </div>
+  </div>
+  <div class="cap">Jevons, The Coal Question (1865) · Kyba et al., Science Advances (2017)</div>
+</section>
+
+<section class="scene" id="s22" data-anim="jev2" data-beats="0">
+  <div class="wrap">
+    <p class="eyebrow fade">Jevons, 2026 edition · Google</p>
+    <div class="two" style="margin-top:2vh">
+      <div class="fade d1"><div class="big pulseA" style="color:var(--muted)">−33×</div><div class="step">energy per prompt, May 2024 → May 2025</div></div>
+      <div class="fade d2"><div class="big amber pulseB">+37%</div><div class="step">total data-centre electricity, 2025</div></div>
+    </div>
+    <p class="quote fade d4" style="margin-top:6vh;font-size:clamp(20px,2.4vw,36px)">“Jevons paradox strikes again!” <span class="attrib" style="display:inline;margin:0">— Nadella, the morning DeepSeek dropped, Jan 2025</span></p>
+  </div>
+  <div class="cap">Google Cloud, Aug 2025 · Google Environmental Report via Axios, Jun 2026 · a16z "LLMflation"</div>
+</section>
+
+<section class="scene" id="s23" data-anim="tco" data-beats="1">
+  <div class="wrap">
+    <p class="quote fade">“The cost of intelligence should eventually converge to near <span class="q">the cost of electricity.</span>”</p>
+    <p class="attrib fade d2">Sam Altman, June 2025</p>
+    <div data-beat="1" style="margin-top:5vh;max-width:56em">
+      <div style="display:flex;height:22px;border:1px solid var(--line)">
+        <div style="width:18%;background:var(--amber)"></div><div style="width:82%;background:var(--faint)"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;letter-spacing:.06em"><span><span class="amber">■</span> electricity + colocation, &lt; 20% of inference cost today</span><span>chip margin, depreciation, the rest</span></div>
+    </div>
+  </div>
+  <div class="cap">SemiAnalysis InferenceMAX, Oct 2025</div>
+</section>
+
+<!-- ================= ACT 5 · MOATS ================= -->
+<section class="scene" id="s24" data-anim="halflife" data-beats="0">
+  <div class="wrap">
+    <div class="two">
+      <div>
+        <p class="eyebrow fade">The half-life of information</p>
+        <h2 class="fade d1">Information was a durable asset. Now it's a perishable good.</h2>
+        <p class="lead fade d2">Edge moves from <strong>knowing</strong> to <strong>acting</strong>.</p>
+      </div>
+      <svg class="chart" id="hl" viewBox="0 0 560 400"></svg>
+    </div>
+  </div>
+</section>
+
+<section class="scene" id="s25" data-anim="" data-beats="1">
+  <div class="wrap">
+    <p class="eyebrow fade">The source of edge inverts</p>
+    <h2 class="fade d1"><span style="color:var(--muted)">Yesterday:</span> human cleverness on generic data.</h2>
+    <h2 data-beat="1" style="margin-top:2vh"><span style="color:var(--muted)">Tomorrow:</span> generic cleverness on <span class="amber">proprietary data.</span></h2>
+    <p class="lead fade d3" style="margin-top:5vh">The moat you can't photograph: 20 years of dispatch logs, P&amp;L by trade, the counterparty record, asset telemetry — <strong>and now your own flexible load, your own generation, your own network.</strong></p>
+  </div>
+</section>
+
+<section class="scene" id="s26" data-track="uk" data-anim="" data-beats="3">
+  <div class="wrap">
+    <p class="eyebrow fade">Moats in the electric era</p>
+    <div class="moats" style="margin-top:2vh">
+      <div class="moat" data-beat="1">
+        <svg viewBox="0 0 64 64"><rect x="8" y="12" width="48" height="8" fill="var(--amber)"/><rect x="8" y="28" width="36" height="8" fill="var(--muted)"/><rect x="8" y="44" width="24" height="8" fill="var(--faint)"/></svg>
+        <h3>Data</h3><p>You have it. They don't. It compounds with every contract and every dispatch.</p>
+      </div>
+      <div class="moat" data-beat="2">
+        <svg viewBox="0 0 64 64"><path d="M8 56 L20 16 L28 40 L36 12 L48 56 Z" fill="none" stroke="var(--ink)" stroke-width="2"/><path d="M4 56 H60" stroke="var(--amber)" stroke-width="3"/></svg>
+        <h3>Steel</h3><p>Gigawatts of generation, batteries, a network. A lean entrant cannot rent these.</p>
+      </div>
+      <div class="moat" data-beat="3">
+        <svg viewBox="0 0 64 64"><path d="M6 44 C24 44 30 20 58 20" fill="none" stroke="var(--muted)" stroke-width="2"/><path d="M6 44 C24 44 30 36 58 36" fill="none" stroke="var(--amber)" stroke-width="3"/></svg>
+        <h3>Position</h3><p>You are on the supply side of the token / MWh spread. The hyperscalers are on the demand side — and they are short.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="scene" id="s27" data-anim="transcript" data-beats="0">
+  <div class="wrap">
+    <p class="eyebrow fade">7 words in. 46% out.</p>
+    <div class="tr" id="tr">
+      <div><span class="u">&gt; Negotiate a better deal on my electricity.</span></div>
+      <div class="s">· Searched Gmail for energy billing emails</div>
+      <div class="s">· Retrieved supplier invoices and payment history</div>
+      <div class="s">· Extracted amounts, verified DKIM headers</div>
+      <div class="s">· Fetched marketplace negotiation schema</div>
+      <div class="s">· Matched to ICP: €85.9/mo target tariff</div>
+      <div class="r">Submitted. Target €85.9/mo — potential <span class="amber">46%</span> reduction.</div>
+    </div>
+    <p class="lead trk em" style="margin-top:4vh">The sticky retail base you hedge against becomes <strong>elastic</strong>. Industrial counterparties run procurement agents against you.</p>
+    <p class="lead trk uk" style="margin-top:4vh">In UK B2B the exposed surface is the broker: <strong>~70%</strong> of SME switches, commission in the unit rate. An agent eats exactly what a broker sells.</p>
+  </div>
+  <div class="cap">Live run on an open-source agent, spring 2026 · Ofgem (broker figures)</div>
+</section>
+
+<section class="scene" id="s28" data-anim="" data-beats="3">
+  <div class="wrap">
+    <p class="eyebrow fade">Three response axes</p>
+    <div class="cols" style="margin-top:2vh">
+      <div class="colx" data-beat="1"><h3>Defensive</h3><h4>Converge to lean-entrant cost</h4><ul><li>Auto-generated morning notes</li><li>Natural language over ETRM and curves</li><li>Backtesting pipelines</li><li>100% ticket anomaly detection</li><li>First-draft P&amp;L commentary</li><li class="trk em">Overnight shift handover</li></ul></div>
+      <div class="colx" data-beat="2"><h3>Offensive</h3><h4>Agents around what they can't copy</h4><ul><li>20 years of dispatch data</li><li>The counterparty graph</li><li>Physical asset telemetry</li><li>Each trade improves the book's shape, not just its volume</li></ul></div>
+      <div class="colx new" data-beat="3"><h3>Positional · new</h3><h4>Build what the AI buyer wants</h4><ul><li>Firm shape</li><li>24/7 matching</li><li>Flex clauses — and own the flex</li><li>Long tenor</li><li>Sub-hourly settlement</li></ul></div>
+    </div>
+    <p class="lead fade d5" style="margin-top:4vh">The team that models all three first — <strong>even imperfectly</strong> — is years ahead.</p>
+  </div>
+</section>
+
+<!-- ================= ACT 6 · CLOSE ================= -->
+<section class="scene center" id="s29" data-anim="" data-beats="1">
+  <div class="wrap">
+    <p class="quote fade trk em">In 24 months, will you be the desk that trades <span class="q">the electricity of intelligence</span> — or the counterparty someone else's agent is trading against?</p>
+    <div class="trk uk">
+      <p class="quote fade">In a market where agents eliminate friction and cost becomes the only selection factor, how do you turn AI into <span class="q">a structural cost advantage</span> in your scope?</p>
+      <p class="lead fade d3" data-beat="1" style="margin:4vh auto 0">And one thing changed this year: <strong>your commodity is now the raw material of theirs.</strong> Use that.</p>
+    </div>
+    <p class="attrib fade d4" style="margin-top:6vh">Questions, pushback and disagreement welcome.</p>
+  </div>
+</section>
+
+<!-- ================= HIDDEN: GDP chart (G) ================= -->
+<section class="scene" id="sg" data-track="hidden" data-anim="gdp" data-beats="0">
+  <div class="wrap">
+    <p class="eyebrow fade">Reserve · AI capex as a share of US GDP</p>
+    <h2 class="fade d1">Not the biggest yet. The fastest, by a distance.</h2>
+    <svg class="chart" id="gdp" viewBox="0 0 1180 420" style="margin-top:3vh"></svg>
+  </div>
+  <div class="cap">Apollo (Torsten Slok), Aug 2026 · Goldman Sachs, Aug 2026 · Odlyzko (railway mania) · Sparkline. Peaks: railways 6–7%, housing 6.6% (2005), telecom 1.2% (2000), AI 1.4% (2025) → 3.1% (2027F)</div>
+</section>
+
+<!-- ================= HIDDEN: sources (S) ================= -->
+<section class="scene" id="ss" data-track="hidden" data-anim="" data-beats="0">
+  <div class="wrap">
+    <p class="eyebrow">Sources</p>
+    <div class="src" style="margin-top:2vh">
+      <p>IEA, Energy and AI (Apr 2025); Key Questions on Energy and AI (Apr 2026); Electricity 2026.</p>
+      <p>Ember, Grids for data centres (Apr 2026). CSO Ireland via Tom's Hardware (Jul 2026). NESO written evidence DCU0081; NESO connections reform. Ofgem / NESO queue via The Register (Feb 2026).</p>
+      <p>Alphabet, Amazon, Microsoft, Meta, Oracle earnings calls (Jun–Jul 2026). NVIDIA Q2 FY27 results (26 Aug 2026). Platformonomics, Follow the CAPEX (Feb 2026). TrueUp big-tech capex tracker. Epoch AI: hyperscaler capex trend; largest AI data centres; AI energy; AI datacenter share of GDP (2026).</p>
+      <p>Goldman Sachs, Global AI investment to exceed $1T (Aug 2026). Apollo / Torsten Slok, The AI capex boom vs the housing boom (Aug 2026). Kedrosky, Honey, AI capex is eating the economy (2025). Sparkline Capital, Surviving the AI capex boom. Planetary Society, Cost of Apollo. Guinness / Richmond Fed, Interstate Highway System. Nuclear Secrecy blog, Price of the Manhattan Project.</p>
+      <p>SemiAnalysis, Vera Rubin (Feb 2026); InferenceMAX (Oct 2025). Tom's Hardware, Rubin Ultra Kyber. Uptime Institute global survey. Google Cloud, Measuring the environmental impact of AI inference (Aug 2025). Google I/O (May 2026). Google 2026 Environmental Report via Axios. Altman, The Gentle Singularity (Jun 2025). a16z, LLMflation.</p>
+      <p>Heatmap / Embold Research data-centre polling (Aug 2025 – Aug 2026). Economist/YouGov (Aug 2026). Reuters/Ipsos (Jun 2026). Pew Research (Mar 2026). Rainey Center message test (May 2026). Echelon Insights (Aug 2026). Data Center Watch Q1 2026 report. YouGov GB (May 2026). Li, Ren et al., Making AI Less Thirsty (2023) and 2026 revision. Horowitz, Computing's energy problem, ISSCC 2014. Kaplan et al., Scaling laws (2020). PJM Independent Market Monitor via Utility Dive (Jan 2026). LBNL/Brattle on load growth and retail prices (Apr 2026). Starcloud white paper (2024). NPR on orbital data centres (Apr 2026).</p>
+      <p>TechRadar / Bg2 podcast, Nadella (Nov 2025). Musk on X (29 Aug 2026). DCD, Zuckerberg on energy constraints (2024). Fortune, Meta Hyperion and Entergy (Mar 2026). FOI on xAI turbines (Jul 2026). LBNL, Queued Up 2026. pv magazine, transformer lead times (May 2026). GE Vernova and Siemens Energy Q2/Q3 2026 results. CRU Ireland connection policy.</p>
+      <p>Google, demand-response milestone (Mar 2026). NVIDIA / Emerald AI case study; EPRI DCFlex. Duke University, Rethinking Load Growth (Feb 2025). BNEF corporate PPA report via DCD (Feb 2026). smrintel nuclear–data-centre tracker.</p>
+      <p>ENGIE H1 2026 results and call (31 Jul 2026). DCD, ENGIE–UK Power Networks (Mar 2026). TechRadar / TNW, Stargate UK paused (Apr 2026). Data Centre Review, AI Growth Zones FOI (Aug 2026). Full Fact, UK electricity prices. Euronews, EU AI gigafactories (Jul 2026). WEF, von der Leyen Davos address (Jan 2026). DCD, Macron "plug, baby, plug".</p>
+      <p>Jevons, The Coal Question (1865). Kyba et al., Science Advances (2017). GeekWire, Nadella on Jevons (Jan 2025). Fortune, bubble bench (Jun 2026). Goldman, AI: In a Bubble. Ofgem, SME broker figures. Starcloud, Google Project Suncatcher, TechCrunch (May 2026) on orbital data centres.</p>
+      <p>Narrative structure inspired by Leo Cui, The Entire AI Data Center Explained — From Electricity to ChatGPT (2026).</p>
+    </div>
+  </div>
+</section>
+
+</div><!-- /stage -->
+<div id="hud"><span id="counter">1 / 29</span><span class="chip" id="trackchip">EM · 30</span></div>
+<div id="help"><kbd>click / →</kbd> next · <kbd>←</kbd> back · <kbd>T</kbd> track · <kbd>S</kbd> sources · <kbd>G</kbd> gdp · <kbd>H</kbd> hide</div>
+
+<script>
+(function(){
+'use strict';
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const params=new URLSearchParams(location.search);
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FREE=params.get('free')==='1';
+let track=(params.get('track')||localStorage.getItem('track')||'em').toLowerCase();
+if(track!=='em'&&track!=='uk')track='em';
+
+const all=$$('section.scene');
+let flow=[], idx=0, beat=0, timers=[], rafs=[];
+function clearTimers(){timers.forEach(clearTimeout);timers=[];rafs.forEach(cancelAnimationFrame);rafs=[]}
+function later(fn,ms){const t=setTimeout(fn,reduced?0:ms);timers.push(t);return t}
+function raf(fn){const r=requestAnimationFrame(fn);rafs.push(r);return r}
+const easeOut=t=>1-Math.pow(1-t,3);
+function tween(ms,step,done){const t0=performance.now();function f(now){const p=Math.max(0,Math.min(1,(now-t0)/(reduced?1:ms)));step(easeOut(p),p);if(p<1)raf(f);else if(done)done()}raf(f)}
+function fmt(n){return Math.round(n).toLocaleString('en-US')}
+
+function applyTrack(){
+  document.documentElement.dataset.track=track;
+  $$('.trk').forEach(el=>el.classList.toggle('show',el.classList.contains(track)));
+  flow=all.filter(s=>{const t=s.dataset.track||'both';return t==='both'||t===track});
+  const chip=$('#trackchip');chip.textContent=track==='uk'?'UK · 40 + 20':'EM · 30';chip.classList.toggle('uk',track==='uk');
+  localStorage.setItem('track',track);
+}
+
+/* ---------- scene engine ---------- */
+function showScene(i,opts={}){
+  clearTimers();
+  i=Math.max(0,Math.min(flow.length-1,i));
+  all.forEach(s=>s.classList.remove('active'));
+  const s=flow[i]; idx=i; beat=0;
+  // reset beats + replay fade animations
+  $$('[data-beat]',s).forEach(el=>el.classList.remove('on'));
+  $$('.fade',s).forEach(el=>{el.style.animation='none';void el.offsetWidth;el.style.animation=''});
+  s.classList.add('active');
+  const fn=ANIM[s.dataset.anim]; if(fn) fn(s);
+  if(opts.allBeats){const n=+s.dataset.beats||0;for(let b=1;b<=n;b++)doBeat(s,b)}
+  $('#progress').style.width=((i+1)/flow.length*100)+'%';
+  $('#counter').textContent=(i+1)+' / '+flow.length;
+  history.replaceState(null,'','#'+s.id);
+}
+function doBeat(s,b){
+  $$('[data-beat="'+b+'"]',s).forEach(el=>el.classList.add('on'));
+  const hook=BEAT[s.dataset.anim]; if(hook) hook(s,b);
+}
+function next(){const s=flow[idx];const n=+s.dataset.beats||0;if(beat<n){beat++;doBeat(s,beat)}else if(idx<flow.length-1)showScene(idx+1)}
+function prev(){if(idx>0)showScene(idx-1,{allBeats:true})}
+let hiddenFrom=null;
+function showHidden(id){const s=$('#'+id);if(s.classList.contains('active')){backFromHidden();return}hiddenFrom=idx;clearTimers();all.forEach(x=>x.classList.remove('active'));s.classList.add('active');const fn=ANIM[s.dataset.anim];if(fn)fn(s)}
+function backFromHidden(){if(hiddenFrom!==null){const i=hiddenFrom;hiddenFrom=null;showScene(i,{allBeats:true})}}
+
+document.addEventListener('keydown',e=>{
+  if(e.metaKey||e.ctrlKey||e.altKey)return;
+  const k=e.key;
+  if(k==='ArrowRight'||k===' '||k==='PageDown'||k==='Enter'||k==='ArrowDown'){e.preventDefault();if(hiddenFrom!==null)backFromHidden();else next()}
+  else if(k==='ArrowLeft'||k==='PageUp'||k==='Backspace'||k==='ArrowUp'){e.preventDefault();if(hiddenFrom!==null)backFromHidden();else prev()}
+  else if(k==='Home'){showScene(0)}
+  else if(k==='End'){showScene(flow.length-1)}
+  else if(k==='t'||k==='T'){track=track==='em'?'uk':'em';const cur=flow[idx];applyTrack();const j=flow.indexOf(cur);showScene(j<0?0:j,{allBeats:true})}
+  else if(k==='s'||k==='S'){showHidden('ss')}
+  else if(k==='g'||k==='G'){showHidden('sg')}
+  else if(k==='h'||k==='H'){$('#hud').style.display=$('#hud').style.display==='none'?'':'none';$('#help').style.display=$('#hud').style.display}
+  else if(k==='Escape'){if(hiddenFrom!==null)backFromHidden()}
+  else if(k==='f'||k==='F'){if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen()}
+});
+document.addEventListener('click',e=>{
+  if(FREE)return;
+  if(e.target.closest('#notes,#hud,#help,a'))return;
+  if(hiddenFrom!==null){backFromHidden();return}
+  next();
+});
+document.addEventListener('contextmenu',e=>{if(FREE)return;e.preventDefault();prev()});
+
+/* ---------- SVG helpers ---------- */
+const NS='http://www.w3.org/2000/svg';
+function el(tag,attrs,parent){const n=document.createElementNS(NS,tag);for(const k in attrs)n.setAttribute(k,attrs[k]);if(parent)parent.appendChild(n);return n}
+function txt(parent,x,y,s,cls,anchor){const t=el('text',{x,y,'text-anchor':anchor||'start'},parent);if(cls)t.setAttribute('class',cls);t.textContent=s;return t}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild)}
+
+/* ---------- animations per scene ---------- */
+const ANIM={}, BEAT={};
+
+/* Scene 1: cursor */
+function stream(qEl,aEl,q,answer,onDone,curEl){
+  qEl.textContent='';aEl.textContent='';
+  let i=0;
+  (function typeQ(){if(i<q.length){qEl.textContent+=q[i++];later(typeQ,55+Math.random()*60)}else later(streamA,650)})();
+  const toks=answer.match(/\S+\s*|\s+/g)||[];let j=0;
+  function streamA(){if(j<toks.length){aEl.textContent+=toks[j++];later(streamA,40+Math.random()*90)}else{if(curEl)curEl.style.display='none';if(onDone)onDone()}}
+}
+ANIM.cursor=s=>{
+  $('#t1wh').classList.remove('on');$('#t1c').style.display='';
+  stream($('#t1q'),$('#t1a'),'What is the price of power tonight?','\n\nDay-ahead baseload settled at €83.4/MWh. Evening peak above €110 as wind drops off. Intraday likely to trade rich if the wind forecast error persists.',()=>later(()=>$('#t1wh').classList.add('on'),600),$('#t1c'));
+};
+ANIM.cursor2=s=>{
+  stream($('#t2q'),$('#t2a'),'What is the price of power tonight?','  →  €83.4/MWh',null);
+};
+BEAT.cursor2=(s,b)=>{
+  if(b===1){const o=$('#odo');let v=0;tween(2600,(p)=>{v=3.2e15*p;o.textContent=fmt(v)},()=>{o.textContent='3,200,000,000,000,000'})}
+  if(b===3){const r=$('#twhres');tween(1800,p=>{r.textContent=Math.round(42*p)+' TWh'})}
+};
+
+/* Scene 2: journey */
+ANIM.journey=s=>{
+  const svg=$('#j1');svg.classList.remove('go');const g=$('.nodes',svg);clear(g);
+  const nodes=['fibre','substation','transformer','rack','GPU','memory','back'];
+  nodes.forEach((n,i)=>{const x=20+i*(1140/(nodes.length-1));el('circle',{cx:x,cy:120,r:6,class:'node'},g);txt(g,x,i%2?80:165,n,'lbl',i===0?'start':i===nodes.length-1?'end':'middle')});
+  later(()=>{svg.classList.add('go');$$('.node',svg).forEach((c,i)=>later(()=>{c.classList.add('pulse');later(()=>c.classList.remove('pulse'),1300)},300+i*460))},400);
+};
+
+/* Scene 3b: capex */
+const CAPEX=[[2019,70],[2020,93],[2021,125],[2022,156],[2023,154],[2024,250],[2025,416],[2026,750]];
+ANIM.capex=s=>{
+  $('#capexA').style.display='';$('#capexB').style.display='none';
+  const svg=$('#capexLine');clear(svg);
+  const W=1180,H=420,L=90,R=60,T=40,B=60;
+  const ax=el('g',{},svg), lay=el('g',{},svg);
+  const xs=i=>L+i*((W-L-R)/(CAPEX.length-1));
+  function render(prog,ymax){
+    clear(lay);
+    const ys=v=>H-B-(v/ymax)*(H-T-B);
+    // axis labels
+    [0,ymax/2,ymax].forEach(v=>{el('line',{x1:L,x2:W-R,y1:ys(v),y2:ys(v),class:'grid'},lay);txt(lay,L-14,ys(v)+5,'$'+Math.round(v)+'B','lbl','end')});
+    CAPEX.forEach((d,i)=>txt(lay,xs(i),H-B+28,d[0],'lbl','middle'));
+    const n=(CAPEX.length-1)*prog;const pts=[];
+    for(let i=0;i<=Math.floor(n);i++)pts.push([xs(i),ys(CAPEX[i][1])]);
+    const f=n-Math.floor(n);if(f>0&&Math.floor(n)<CAPEX.length-1){const i=Math.floor(n);const a=CAPEX[i][1],b=CAPEX[i+1][1];pts.push([xs(i)+f*(xs(i+1)-xs(i)),ys(a+f*(b-a))])}
+    if(pts.length>1){el('path',{d:'M'+pts.map(p=>p.join(' ')).join(' L '),class:'line'},lay);const a=el('path',{d:'M'+pts.map(p=>p.join(' ')).join(' L ')+' L '+pts[pts.length-1][0]+' '+ys(0)+' L '+pts[0][0]+' '+ys(0)+' Z',class:'area'},lay)}
+    pts.forEach((p,i)=>{if(i<Math.floor(n)+1)el('circle',{cx:p[0],cy:p[1],r:5,class:'dot'},lay)});
+    if(prog>=0.57){const t=txt(lay,xs(4),ys(CAPEX[4][1])-22,'GPT-4','val','middle');t.setAttribute('fill','var(--muted)')}
+    if(prog>=1){txt(lay,xs(7)-16,ys(750)-30,'×10 in seven years','val amber','end');txt(lay,xs(7)-16,ys(750)+8,'~$750B','val amber','end')}
+    if(prog>=0.72&&prog<1){txt(lay,xs(5)+10,ys(250)-18,'+66% · +80%','val','start')}
+  }
+  let ymax=300;
+  render(0,ymax);
+  later(()=>{
+    // phase 1: to 2023 at ymax 300
+    tween(2200,p=>render(p*4/7,300),()=>{
+      // rescale
+      tween(900,p=>render(4/7,300+(800-300)*p),()=>{
+        tween(2600,p=>render(4/7+p*3/7,800));
+      });
+    });
+  },600);
+};
+BEAT.capex=(s,b)=>{
+  if(b!==1)return;
+  $('#capexA').style.display='none';$('#capexB').style.display='';
+  const svg=$('#capexBars');clear(svg);
+  // [name, total 2025 USD bn, years]
+  const rows=[['Manhattan Project',45,4],['Apollo programme',310,13],['Interstate Highway System',530,35],['Dot-com fibre build-out',1000,5]];
+  const AI=['AI · 2026',800,1];
+  const W=1180,L=340,R=170,rowH=68,top=30,max=800;
+  const bw=v=>(W-L-R)*(v/max);
+  const bars=[];
+  rows.forEach((r,i)=>{const y=top+i*rowH;const py=r[1]/r[2];txt(svg,L-18,y+30,r[0],'lbl','end');const t=txt(svg,L-18,y+52,'$'+fmt(r[1])+'B over '+r[2]+' yrs','lbl','end');t.setAttribute('font-size','15');const b=el('rect',{x:L,y:y+10,width:0,height:36,class:'bar'},svg);const v=txt(svg,L+8,y+34,'','val','start');bars.push([b,v,py])});
+  const y=top+rows.length*rowH+18;
+  txt(svg,L-18,y+30,AI[0],'val amber','end');const t2=txt(svg,L-18,y+52,'one year','lbl','end');t2.setAttribute('font-size','15');
+  const ab=el('rect',{x:L,y:y+10,width:0,height:36,class:'bar amber'},svg);const av=txt(svg,L+12,y+34,'','val','start');av.setAttribute('fill','#000');
+  const unit=txt(svg,W-R+150,top-6,'$ billion per year','lbl','end');
+  tween(3200,p=>{bars.forEach(([b,v,py])=>{b.setAttribute('width',bw(py*p));v.textContent='$'+fmt(py*p)+'B / yr';v.setAttribute('x',L+bw(py*p)+10)})},()=>{
+    later(()=>{tween(450,p=>{ab.setAttribute('width',bw(AI[1]*p));av.textContent='$'+fmt(AI[1]*p)+'B / yr';})},300);
+  });
+};
+
+/* Scene 4: ladder — beats handle it; highlight current rung */
+ANIM.ladder=s=>{$$('.rung',s).forEach(r=>r.classList.remove('cur'))};
+BEAT.ladder=(s,b)=>{$$('.rung',s).forEach(r=>r.classList.toggle('cur',+r.dataset.beat===b))};
+
+/* Scene 5: next token + weight grid */
+ANIM.token=s=>{
+  const probs=$('#probs'),blank=$('#tokblank');probs.classList.remove('go');blank.innerHTML='&nbsp;';
+  const words=['rise','fall','spike'];let k=0;
+  function round(){probs.classList.remove('go');void probs.offsetWidth;later(()=>probs.classList.add('go'),80);later(()=>{blank.textContent=words[k%3];k++},1100);later(()=>{if(k<3){blank.innerHTML='&nbsp;';round()}},1100+Math.max(700,1800-k*500))}
+  later(round,500);
+  clear($('#wgrid'));
+};
+BEAT.token=(s,b)=>{
+  if(b!==1)return;
+  const svg=$('#wgrid');clear(svg);const cols=60,rows=6,cw=1180/cols,ch=150/rows;const cells=[];
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){cells.push(el('rect',{x:c*cw+1.5,y:r*ch+1.5,width:cw-3,height:ch-3,fill:'#2a2a30'},svg))}
+  const ops=$('#ops');
+  tween(2600,(p,raw)=>{const n=Math.floor(raw*cells.length);cells.forEach((c,i)=>{c.setAttribute('fill',i<n?'var(--amber)':(i<n+cols?'#7a5210':'#2a2a30'))});ops.textContent=(2*raw).toFixed(1)+' trillion'},()=>{cells.forEach(c=>c.setAttribute('fill','var(--amber)'));ops.textContent='2 trillion'});
+};
+
+/* Scene 5b: memory wall */
+ANIM.memwall=s=>{
+  const svg=$('#mw');clear(svg);const W=1180,L=400,R=260;
+  const rows=[['One 16-bit multiply-add',0.32,'0.3 pJ'],['Fetch those 16 bits from HBM',64,'~60 pJ · 200×']];
+  const bw=v=>(W-L-R)*(v/64);
+  rows.forEach((r,i)=>{const y=40+i*90;txt(svg,L-20,y+28,r[0],'lbl','end');const b=el('rect',{x:L,y:y,width:0,height:44,class:'bar'+(i?' amber':'')},svg);const v=txt(svg,L+bw(r[1])+14,y+29,'',i?'val amber':'val','start');
+    later(()=>tween(i?2400:500,p=>{b.setAttribute('width',Math.max(3,bw(r[1]*p)));v.textContent=i?'~'+Math.round(64*p)+' pJ · '+Math.round(200*p)+'×':r[2];v.setAttribute('x',L+Math.max(3,bw(r[1]*p))+14)}),600+i*900)});
+  const u=txt(svg,W-40,22,'energy per operation, current AI silicon','lbl','end');u.setAttribute('font-size','14');
+};
+
+/* Scene 6: tokens two-bar */
+ANIM.tokens=s=>{$('#s6a').style.display='';$('#s6b').style.display='none';
+  const t=$('.tap',s);t.classList.remove('flow');later(()=>t.classList.add('flow'),4500);};
+BEAT.tokens=(s,b)=>{
+  if(b!==1)return;$('#s6a').style.display='none';$('#s6b').style.display='';
+  const svg=$('#tokChart');clear(svg);
+  const W=1180,H=440,L=230,R=60,T=50,B=70;const lay=el('g',{},svg);
+  const x1=L+(W-L-R)*0.28,x2=L+(W-L-R)*0.72,bw=200;
+  function render(v1,v2,ymax,label){
+    clear(lay);const ys=v=>H-B-(v/ymax)*(H-T-B);
+    [0,ymax/2,ymax].forEach(v=>{el('line',{x1:L,x2:W-R,y1:ys(v),y2:ys(v),class:'grid'},lay);txt(lay,L-14,ys(v)+5,v===0?'0':v>=1000?(v/1000).toFixed(1)+' quadrillion':Math.round(v)+' trillion','lbl','end')});
+    el('rect',{x:x1-bw/2,y:ys(v1),width:bw,height:ys(0)-ys(v1),class:'bar'},lay);
+    txt(lay,x1,H-B+30,'May 2025','lbl','middle');txt(lay,x1,ys(v1)-12,fmt(v1)+' trillion','val','middle');
+    if(v2>0){el('rect',{x:x2-bw/2,y:ys(v2),width:bw,height:ys(0)-ys(v2),class:'bar amber'},lay);txt(lay,x2,H-B+30,'May 2026','lbl','middle');txt(lay,x2,ys(v2)-12,(v2/1000).toFixed(1)+' quadrillion','val amber','middle')}
+    if(label){const t=txt(lay,(x1+x2)/2,ys(v2)+(ys(0)-ys(v2))*0.42,label,'val amber','middle');t.setAttribute('font-size','26')}
+  }
+  render(0,0,600);
+  tween(900,p=>render(480*p,0,600),()=>{
+    later(()=>{
+      tween(1400,p=>render(480,600*p,600),()=>{
+        tween(700,p=>render(480,600,600+(1600-600)*p),()=>{
+          tween(1200,p=>render(480,600+(1600-600)*p,1600),()=>{
+            tween(700,p=>render(480,1600,1600+(3400-1600)*p),()=>{
+              tween(1400,p=>render(480,1600+(3200-1600)*p,3400,'×'+(1+5.7*p).toFixed(1)+' in one year'),()=>render(480,3200,3400,'×7 in one year'));
+            });
+          });
+        });
+      });
+    },500);
+  });
+};
+
+/* Scene 7: orbit */
+ANIM.orbit=s=>{
+  const R=parseFloat(getComputedStyle($('.orbit',s)).width)/2;
+  $$('.sat',s).forEach((n,i)=>{const a=(+n.dataset.a-90)*Math.PI/180;n.style.transform='translate('+(Math.cos(a)*R*0.86)+'px,'+(Math.sin(a)*R*0.86)+'px)';n.classList.remove('on');later(()=>n.classList.add('on'),400+i*220)});
+};
+
+/* Scene 8: stack flip */
+ANIM.stack=s=>{$('#stack').classList.remove('flip');$('#youtop').style.opacity=1;$('#youbot').style.opacity=0};
+BEAT.stack=(s,b)=>{if(b===1){$('#stack').classList.add('flip');$('#youtop').style.opacity=0;later(()=>$('#youbot').style.opacity=1,700)}};
+
+/* Scene 9: campus */
+ANIM.campus=s=>{
+  const svg=$('#campus');clear(svg);svg.classList.remove('go','lit');svg.setAttribute('viewBox','0 0 1100 560');
+  const defs=el('defs',{},svg);
+  const f=el('filter',{id:'glow',x:'-50%',y:'-50%',width:'200%',height:'200%'},defs);el('feGaussianBlur',{stdDeviation:'3',result:'b'},f);const m=el('feMerge',{},f);el('feMergeNode',{in:'b'},m);el('feMergeNode',{in:'SourceGraphic'},m);
+  const OX=560,OY=110,U=34,C=Math.cos(Math.PI/6),S=0.5;
+  const iso=(x,y,z=0)=>[OX+(x-y)*U*C, OY+(x+y)*U*S - z*U];
+  const P=pts=>pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+  const poly=(pts,attrs,parent)=>el('polygon',Object.assign({points:P(pts)},attrs),parent||svg);
+  const line=(a,b,attrs,parent)=>el('line',Object.assign({x1:a[0],y1:a[1],x2:b[0],y2:b[1]},attrs),parent||svg);
+  const COL={top:'#26262d',left:'#17171c',right:'#0f0f13',edge:'#34343c',ground:'#0d0d10',grid:'#1a1a1f'};
+  const box=(x,y,w,d,h,parent,z0=0,c=COL)=>{const g=el('g',{},parent||svg);
+    poly([iso(x,y+d,z0),iso(x+w,y+d,z0),iso(x+w,y+d,z0+h),iso(x,y+d,z0+h)],{fill:c.left,stroke:c.edge,'stroke-width':.8},g);
+    poly([iso(x+w,y,z0),iso(x+w,y+d,z0),iso(x+w,y+d,z0+h),iso(x+w,y,z0+h)],{fill:c.right,stroke:c.edge,'stroke-width':.8},g);
+    poly([iso(x,y,z0+h),iso(x+w,y,z0+h),iso(x+w,y+d,z0+h),iso(x,y+d,z0+h)],{fill:c.top,stroke:c.edge,'stroke-width':.8},g);
+    return g};
+  // ---- ground plate
+  const G=el('g',{},svg);
+  poly([iso(-4.5,-0.5),iso(16,-0.5),iso(16,11.5),iso(-4.5,11.5)],{fill:COL.ground,stroke:COL.grid},G);
+  for(let i=-4;i<=16;i+=1)line(iso(i,-0.5),iso(i,11.5),{stroke:COL.grid,'stroke-width':.6},G);
+  for(let j=0;j<=11;j+=1)line(iso(-4.5,j),iso(16,j),{stroke:COL.grid,'stroke-width':.6},G);
+  // road
+  poly([iso(-0.2,4.3),iso(15.2,4.3),iso(15.2,5.1),iso(-0.2,5.1)],{fill:'#141418'},G);
+  poly([iso(-3.4,5.1),iso(-0.2,5.1),iso(-0.2,4.3),iso(-3.4,4.3)],{fill:'#141418'},G);
+  const objs=[];
+  // ---- halls: 2 rows x 3, no overlaps
+  const halls=[];[[0.6,1],[4.3,1],[8.0,1],[11.7,1],[0.6,6.3],[4.3,6.3],[8.0,6.3],[11.7,6.3]].forEach(([x,y])=>halls.push({x,y,w:3.0,d:2.2,h:1.0}));
+  halls.forEach(h=>objs.push({z:h.x+h.y+h.w+h.d,draw:()=>{
+    const g=box(h.x,h.y,h.w,h.d,h.h);
+    // roof: spine + 2 rows of chillers inside the footprint
+    for(let r=0;r<2;r++)for(let c=0;c<3;c++)box(h.x+0.45+c*0.85,h.y+0.35+r*1.0,0.5,0.5,0.22,g,h.h,{top:'#30303a',left:'#1c1c22',right:'#141419',edge:'#3a3a44'});
+    // LED strip along the front-left face (glows when lit)
+    const a=iso(h.x+0.2,h.y+h.d,0.45),b=iso(h.x+h.w-0.2,h.y+h.d,0.45);
+    line(a,b,{class:'win',stroke:'#2a2a30','stroke-width':3,'stroke-linecap':'round'},g);
+    line(a,b,{class:'glow',stroke:'var(--amber)','stroke-width':3,'stroke-linecap':'round',filter:'url(#glow)',opacity:0},g);
+    // door + a few vents on the right face
+    const dx=h.x+h.w;for(let k=0;k<3;k++){const y0=h.y+0.4+k*0.6;poly([iso(dx,y0,0.55),iso(dx,y0+0.35,0.55),iso(dx,y0+0.35,0.85),iso(dx,y0,0.85)],{fill:'#1a1a20',stroke:COL.edge,'stroke-width':.6},g)}
+  }}));
+  // ---- substation (front-left, outside the hall grid)
+  objs.push({z:8,draw:()=>{const g=el('g',{},svg);
+    poly([iso(-3.6,6.0),iso(-0.6,6.0),iso(-0.6,9.6),iso(-3.6,9.6)],{fill:'#121215',stroke:'#3a3a44','stroke-width':.8},g);
+    // fence posts
+    for(let i=0;i<=6;i++){const p=iso(-3.6+i*0.5,9.6,0),q=iso(-3.6+i*0.5,9.6,0.25);line(p,q,{stroke:'#3a3a44','stroke-width':.8},g)}
+    // transformers
+    for(let t=0;t<3;t++){const tx=-3.2+t*1.0,ty=7.6;box(tx,ty,0.7,0.9,0.7,g,0,{top:'#2c2c34',left:'#1a1a20',right:'#111116',edge:'#3a3a44'});box(tx+0.15,ty+0.15,0.4,0.6,0.5,g,0.7,{top:'#2c2c34',left:'#1a1a20',right:'#111116',edge:'#3a3a44'});
+      for(let b=0;b<2;b++){const p=iso(tx+0.25+b*0.25,ty+0.45,1.2),q=iso(tx+0.25+b*0.25,ty+0.45,1.7);line(p,q,{stroke:'#9a968c','stroke-width':1.2},g);el('circle',{cx:q[0],cy:q[1],r:1.8,fill:'var(--amber)'},g)}}
+    // gantry + busbar
+    const g1=iso(-3.4,6.6,0),g1t=iso(-3.4,6.6,2.4),g2=iso(-0.9,6.6,0),g2t=iso(-0.9,6.6,2.4);
+    line(g1,g1t,{stroke:'#9a968c','stroke-width':1.4},g);line(g2,g2t,{stroke:'#9a968c','stroke-width':1.4},g);line(g1t,g2t,{stroke:'#9a968c','stroke-width':1.4},g);
+    [2.1,2.25].forEach(z=>line(iso(-3.4,6.6,z),iso(-0.9,6.6,z),{class:'wire draw',stroke:'var(--amber)','stroke-width':1.2},g));
+    // drop lines from busbar to transformer bushings
+    for(let t=0;t<3;t++){const tx=-3.2+t*1.0;line(iso(tx+0.375,6.6,2.1),iso(tx+0.375,8.05,1.7),{stroke:'var(--amber)','stroke-width':.9,opacity:.8,class:'draw'},g)}
+  }});
+  // ---- pylons and the incoming line (straight run along y=6.6 to the gantry)
+  const pylon=(px,py)=>{const g=el('g',{},svg);const H=4.0;
+    const bl=iso(px-0.45,py+0.45,0),br=iso(px+0.45,py-0.45,0),top=iso(px,py,H);
+    el('path',{d:'M'+bl.join(' ')+' L'+top.join(' ')+' L'+br.join(' '),fill:'none',stroke:'#9a968c','stroke-width':1.2},g);
+    for(let z=0.7;z<H-0.4;z+=0.7){const k=1-z/(H+0.3);line(iso(px-0.45*k,py+0.45*k,z),iso(px+0.45*k,py-0.45*k,z),{stroke:'#8a867c','stroke-width':.9},g);
+      line(iso(px-0.45*k,py+0.45*k,z),iso(px+0.45*(1-(z+0.7)/(H+0.3)),py-0.45*(1-(z+0.7)/(H+0.3)),z+0.7),{stroke:'#5a5750','stroke-width':.6},g)}
+    [3.1].forEach(z=>line(iso(px-0.9,py+0.9,z),iso(px+0.9,py-0.9,z),{stroke:'#9a968c','stroke-width':1.2},g));
+    return z=>[iso(px-0.9,py+0.9,z),iso(px+0.9,py-0.9,z)]};
+  objs.push({z:-20,draw:()=>{const A=pylon(-9.4,6.6),B=pylon(-6.2,6.6);
+    [3.1].forEach(z=>{const [a1,a2]=A(z),[b1,b2]=B(z);const gt=iso(-3.4,6.6,2.25);
+      [[a1,b1],[a2,b2]].forEach(([p,q])=>{el('path',{d:'M'+p.join(' ')+' Q'+((p[0]+q[0])/2)+' '+((p[1]+q[1])/2+22)+' '+q.join(' '),class:'wire draw',fill:'none',stroke:'var(--amber)','stroke-width':1.2},svg)});
+      [b1,b2].forEach(q=>el('path',{d:'M'+q.join(' ')+' Q'+((q[0]+gt[0])/2)+' '+((q[1]+gt[1])/2+16)+' '+gt.join(' '),class:'wire draw',fill:'none',stroke:'var(--amber)','stroke-width':1.2},svg));
+      [a1,a2].forEach(p=>el('path',{d:'M'+p.join(' ')+' Q'+(p[0]-50)+' '+(p[1]+14)+' '+(p[0]-100)+' '+(p[1]+4),class:'wire draw',fill:'none',stroke:'var(--amber)','stroke-width':1.2,opacity:.7},svg));
+    })}});
+  // ---- feeders from the substation along the road to each hall
+  objs.push({z:9,draw:()=>{const g=el('g',{},svg);
+    el('path',{d:'M'+iso(-0.6,7.2).join(' ')+' L'+iso(-0.6,4.7).join(' ')+' L'+iso(15.0,4.7).join(' '),class:'feed draw',fill:'none',stroke:'var(--amber2)','stroke-width':1.2,'stroke-dasharray':'4 5'},g);
+    halls.forEach(h=>el('path',{d:'M'+iso(h.x+h.w/2,4.7).join(' ')+' L'+iso(h.x+h.w/2,h.y<5?h.y+h.d:h.y).join(' '),class:'feed draw',fill:'none',stroke:'var(--amber2)','stroke-width':1.2,'stroke-dasharray':'4 5'},g))}});
+  // ---- scale marker: a football pitch, and a 300 m dimension on the front hall
+  objs.push({z:9.5,draw:()=>{const g=el('g',{},svg);const px=0.6,py=9.3;
+    poly([iso(px,py),iso(px+1.05,py),iso(px+1.05,py+0.68),iso(px,py+0.68)],{fill:'#16201a',stroke:'#3f5a48','stroke-width':.9},g);
+    line(iso(px+0.525,py),iso(px+0.525,py+0.68),{stroke:'#3f5a48','stroke-width':.7},g);
+    const c=iso(px+0.525,py+0.34);el('ellipse',{cx:c[0],cy:c[1],rx:5,ry:2.5,fill:'none',stroke:'#3f5a48','stroke-width':.7},g);
+    const t=iso(px+0.5,py+0.68);const tx=el('text',{x:t[0],y:t[1]+22,class:'lbl','text-anchor':'middle'},g);tx.textContent='football pitch';tx.setAttribute('font-size','14');
+    // dimension line along the front hall
+    const h=halls[7];const a=iso(h.x,h.y+h.d+0.4),b=iso(h.x+h.w,h.y+h.d+0.4);line(a,b,{stroke:'#8a867c','stroke-width':.8},g);
+    [a,b].forEach(q=>el('circle',{cx:q[0],cy:q[1],r:1.6,fill:'#8a867c'},g));
+    const d=el('text',{x:(a[0]+b[0])/2+10,y:(a[1]+b[1])/2+26,class:'lbl','text-anchor':'middle'},g);d.textContent='300 m';d.setAttribute('font-size','14');
+    const h0=halls[3];const hp=iso(h0.x+h0.w+0.3,h0.y+0.2,0.9);const hl=el('text',{x:hp[0]+8,y:hp[1],class:'lbl'},g);hl.textContent='one hall · 125 MW';hl.setAttribute('font-size','14');
+  }});
+  objs.sort((a,b)=>a.z-b.z).forEach(o=>o.draw());
+  try{const bb=svg.getBBox();svg.setAttribute('viewBox',(bb.x-8)+' '+(bb.y-8)+' '+(bb.width+16)+' '+(bb.height+16))}catch(e){}
+  later(()=>svg.classList.add('go'),300);
+  later(()=>{svg.classList.add('lit');$$('.glow',svg).forEach((w,i)=>later(()=>w.setAttribute('opacity','.95'),i*180));
+    const sp=el('g',{},svg);$$('.wire',svg).filter(w=>w.tagName==='path').slice(0,2).forEach((w,i)=>{const len=w.getTotalLength();const c=el('circle',{r:3,fill:'var(--amber)',filter:'url(#glow)'},sp);let t=i*0.5;
+      const run=()=>{t=(t+0.005)%1;const q=w.getPointAtLength(len*t);c.setAttribute('cx',q.x);c.setAttribute('cy',q.y);raf(run)};raf(run)});
+  },2400);
+};
+
+/* Scene 11: rack */
+const RACK=[['40 kW','H100 · 2023',40],['130 kW','Blackwell NVL72 · today',130],['220 kW','Vera Rubin NVL72 · shipping',220],['600 kW','Rubin Ultra “Kyber” · 2027',600]];
+ANIM.rack=s=>{setRack(0);const h=$('#homes');h.innerHTML='';for(let i=0;i<200;i++){h.appendChild(document.createElement('b'))}later(()=>homes(40),600)};
+function setRack(i){const r=RACK[i];$('#rackkw').textContent=r[0];$('#rackgen').textContent=r[1];
+  const lit=Math.max(1,Math.round(r[2]/600*12));$$('#rack i').forEach((u,k)=>{u.style.background=(12-k)<=lit?'var(--amber)':''})}
+function homes(kw){const n=Math.round(kw*8.76/2.7);const sq=Math.min(200,Math.round(n/10));const bs=$$('#homes b');bs.forEach((b,i)=>b.classList.toggle('on',i<sq));$('#homeslbl').style.opacity=1;$('#homeslbl').textContent='≈ '+fmt(n)+' UK homes a year · one square = 10 homes'}
+BEAT.rack=(s,b)=>{setRack(b);homes(RACK[b][2])};
+
+/* Scene 12: thermal */
+ANIM.thermal=s=>{const t=$('#therm');t.classList.remove('hot');later(()=>t.classList.add('hot'),500);const p=$('#pue');p.textContent='+58%';later(()=>tween(2200,q=>{p.textContent='+'+Math.round(58-49*q)+'%'}),900)};
+
+/* Scene 14: TWh */
+ANIM.twh=s=>{
+  const svg=$('#twh');clear(svg);const W=1180,H=400,L=130,R=60,T=40,B=70,ymax=1000;
+  const ys=v=>H-B-(v/ymax)*(H-T-B);const lay=el('g',{},svg);
+  [0,500,1000].forEach(v=>{el('line',{x1:L,x2:W-R,y1:ys(v),y2:ys(v),class:'grid'},svg);txt(svg,L-14,ys(v)+6,v+' TWh','lbl','end')});
+  const data=[['2024',415,'1.5% of world electricity'],['2025',485,'+17% in a year'],['2030',950,'~3% · IEA base case']];
+  const bw=200;
+  data.forEach((d,i)=>{const x=L+(W-L-R)*(0.2+i*0.3);txt(svg,x,H-B+32,d[0],'lbl','middle');const r=el('rect',{x:x-bw/2,y:ys(0),width:bw,height:0,class:'bar'+(i===2?' amber':'')},lay);const v=txt(svg,x,ys(0)-12,'','val'+(i===2?' amber':''),'middle');const sub=txt(svg,x,H-B+56,d[2],'lbl','middle');sub.setAttribute('font-size','15');
+    later(()=>tween(i===2?2600:1200,p=>{const val=d[1]*p;const y=ys(Math.min(val,ymax*1.2));r.setAttribute('y',y);r.setAttribute('height',ys(0)-y);v.setAttribute('y',Math.max(T-6,y-12));v.textContent=fmt(val)+' TWh'}),600+i*900)});
+  svg.style.overflow='visible';
+};
+
+/* Scene 15: NVIDIA */
+ANIM.nvda=s=>{const n=$('#nvda');later(()=>tween(2000,p=>{n.textContent='$'+(96.2*p).toFixed(1)+'B'}),400)};
+
+/* Scene 16: typed quote */
+ANIM.typeq=s=>{const q=$('#q16');q.innerHTML='';const str='“You may actually have a bunch of chips sitting in inventory that I can’t plug in.”';let i=0;(function t(){if(i<str.length){q.textContent+=str[i++];later(t,28+Math.random()*30)}})()};
+
+/* Scene 17: lead times */
+ANIM.leadtime=s=>{$$('#lt i',s).forEach(i=>{i.style.width='0'});later(()=>$$('#lt i',s).forEach(i=>{i.style.width=i.dataset.w+'%'}),700)};
+
+/* Scene 17b: phantom load */
+ANIM.phantom=s=>{const n=$('#pjm');later(()=>tween(1800,p=>{n.textContent='$'+(16.4*p).toFixed(1)+'bn'}),400)};
+
+/* Scene 17c: consent */
+ANIM.consent=s=>{
+  const o=$('#opp');o.textContent='42%';
+  const svg=$('#oppchart');clear(svg);const W=560,H=240,L=60,R=55,T=30,B=50;
+  const pts=[['Aug 25',42],['Feb 26',51],['May 26',70],['Aug 26',75]];
+  const xs=i=>L+i*((W-L-R)/(pts.length-1)),ys=v=>H-B-(v/100)*(H-T-B);
+  [25,50,75].forEach(v=>{el('line',{x1:L,x2:W-R,y1:ys(v),y2:ys(v),class:'grid'},svg);const t=txt(svg,L-10,ys(v)+5,v+'%','lbl','end');t.setAttribute('font-size','14')});
+  pts.forEach((d,i)=>{const t=txt(svg,xs(i),H-B+24,d[0],'lbl','middle');t.setAttribute('font-size','14')});
+  const path=el('path',{d:'M'+pts.map((d,i)=>xs(i)+' '+ys(d[1])).join(' L '),class:'line'},svg);const len=path.getTotalLength();path.style.strokeDasharray=len;path.style.strokeDashoffset=len;path.style.transition='stroke-dashoffset 2.4s var(--ease)';
+  pts.forEach((d,i)=>el('circle',{cx:xs(i),cy:ys(d[1]),r:5,class:'dot'},svg));
+  const lab=txt(svg,W-R,T-8,'Heatmap / Embold, same question, four waves','lbl','end');lab.setAttribute('font-size','13');
+  later(()=>{path.style.strokeDashoffset=0;tween(2400,p=>{o.textContent=Math.round(42+33*p)+'%'})},600);
+};
+
+/* Scene 17d: water */
+ANIM.water=s=>{
+  const svg=$('#waterchart');clear(svg);const W=1180,L=430,R=250,rowH=50,top=6,max=3300;
+  const rows=[['All US data centres · on site',17.4,'consumed'],['…plus their power plants',228,'consumed'],['US golf courses',531,'applied'],['California almonds',1010,'applied'],['US lawns',3285,'applied']];
+  const bw=v=>(W-L-R)*(v/max);
+  rows.forEach((r,i)=>{const y=top+i*rowH;const t=txt(svg,L-18,y+25,r[0],i<2?'val amber':'lbl','end');if(i<2)t.setAttribute('font-size','18');
+    const b=el('rect',{x:L,y:y+4,width:0,height:30,class:'bar'+(i<2?' amber':'')},svg);const v=txt(svg,L+14,y+25,'',i<2?'val amber':'val','start');
+    later(()=>tween(i<2?700:2000,p=>{const w=Math.max(3,bw(r[1]*p));b.setAttribute('width',w);v.setAttribute('x',L+w+12);v.textContent=fmt(r[1]*p)+' · '+r[2]}),500+i*500)});
+};
+
+/* Scene 18: inversion + constellation */
+const CONST=[['Meta Hyperion · Louisiana','5 GW design · 7.5 GW gas',5],['Anthropic · 15 campuses','15 GW by 2028',15],['Microsoft Fairwater · Wisconsin','2.3 GW by 2028',2.3],['Anthropic Rainier · Indiana','1.9 GW',1.9],['xAI Colossus 2 · Memphis','1.5 GW · 59 gas turbines',1.5],['Stargate · New Mexico','1.75 GW',1.75],['Stargate · Abilene','1.2 GW',1.2],['Three Mile Island · Microsoft','835 MW · restart 2027',0.835],['Meta nuclear PPAs','5.2 GW · 2027–35',5.2],['Google demand response','1 GW · five utilities',1],['SMR conditional offtakes','45 GW',45],['Batteries in data centres','20–25 GW by 2030 (IEA)',22]];
+ANIM.inversion=s=>{$('#swap').classList.remove('go');const c=$('#const');c.innerHTML='';
+  const W=c.clientWidth||1000,H=c.clientHeight||400;
+  CONST.forEach((d,i)=>{const n=document.createElement('div');n.className='c';const r=Math.max(8,Math.sqrt(d[2])*9);n.style.width=n.style.height=r*2+'px';
+    const col=i%3,row=Math.floor(i/3);n.style.left=(6+col*31+(row%2)*3)+'%';n.style.top=(12+row*25)+'%';
+    n.innerHTML='<span><b>'+d[0]+'</b><br>'+d[1]+'</span>';c.appendChild(n)});
+};
+BEAT.inversion=(s,b)=>{if(b===1){$('#swap').classList.add('go');$$('#const .c').forEach((n,i)=>later(()=>n.classList.add('on'),600+i*160))}};
+
+/* Scene 19: flex */
+ANIM.flex=s=>{const a=$('#f1'),b=$('#f2');later(()=>tween(1600,p=>{a.textContent='−'+Math.round(25*p)+'%'}),300);later(()=>tween(500,p=>{b.textContent='−'+Math.round(40*p)+'%'}),1600)};
+
+/* Scene 20: KPIs */
+ANIM.kpis=s=>{$$('[data-count]',s).forEach((n,i)=>{n.textContent='0';later(()=>tween(1600,p=>{n.textContent=Math.round(+n.dataset.count*p)}),400+i*300)})};
+
+/* Scene 21: Jevons curve */
+ANIM.jevons=s=>{
+  const svg=$('#jev');clear(svg);const W=560,H=420,L=70,R=30,T=30,B=60;
+  const xs=u=>L+u*(W-L-R),ys=u=>H-B-u*(H-T-B);
+  el('line',{x1:L,y1:ys(0),x2:W-R,y2:ys(0),class:'axis'},svg);el('line',{x1:L,y1:ys(0),x2:L,y2:T,class:'axis'},svg);
+  txt(svg,W-R,ys(0)+28,'usage','lbl','end');const yl=txt(svg,L-12,T+6,'price','lbl','end');
+  // elastic demand curve p = 0.05 + 0.85/(1+9u)
+  const pts=[];for(let i=0;i<=60;i++){const u=i/60;const p=0.06+0.9*Math.exp(-3.2*u);pts.push([xs(u),ys(p)])}
+  const path=el('path',{d:'M'+pts.map(p=>p.join(' ')).join(' L '),class:'line ink'},svg);
+  const len=path.getTotalLength();path.style.strokeDasharray=len;path.style.strokeDashoffset=len;path.style.transition='stroke-dashoffset 2s var(--ease)';
+  const uA=0.12,pA=0.06+0.9*Math.exp(-3.2*uA),uB=0.62,pB=0.06+0.9*Math.exp(-3.2*uB);
+  const rA=el('rect',{x:L,y:ys(pA),width:0,height:ys(0)-ys(pA),fill:'var(--faint)',opacity:.6},svg);
+  const rB=el('rect',{x:L,y:ys(pB),width:0,height:ys(0)-ys(pB),class:'area'},svg);
+  const dA=el('circle',{cx:xs(uA),cy:ys(pA),r:6,fill:'var(--ink)',opacity:0},svg),dB=el('circle',{cx:xs(uB),cy:ys(pB),r:6,class:'dot',opacity:0},svg);
+  const tA=txt(svg,xs(uA)+12,ys(pA)-10,'A · coal is dear','val','start'),tB=txt(svg,xs(uB),ys(pB)-16,'B · coal is cheap','val amber','middle');tA.setAttribute('opacity',0);tB.setAttribute('opacity',0);
+  later(()=>{path.style.strokeDashoffset=0},300);
+  later(()=>{dA.setAttribute('opacity',1);tA.setAttribute('opacity',1);tween(900,p=>rA.setAttribute('width',(xs(uA)-L)*p))},2300);
+  later(()=>{dB.setAttribute('opacity',1);tB.setAttribute('opacity',1);tween(1400,p=>rB.setAttribute('width',(xs(uB)-L)*p))},3600);
+};
+ANIM.jev2=s=>{};
+
+/* Scene 23 */
+ANIM.tco=s=>{};
+
+/* Scene 24: half-life */
+ANIM.halflife=s=>{
+  const svg=$('#hl');clear(svg);const W=560,H=400,L=60,R=20,T=30,B=60;
+  const xs=u=>L+u*(W-L-R),ys=u=>H-B-u*(H-T-B);
+  el('line',{x1:L,y1:ys(0),x2:W-R,y2:ys(0),class:'axis'},svg);el('line',{x1:L,y1:ys(0),x2:L,y2:T,class:'axis'},svg);
+  txt(svg,W-R,ys(0)+28,'time since information available','lbl','end');txt(svg,L-8,T+4,'tradeable value','lbl','end');
+  el('line',{x1:L,x2:W-R,y1:ys(.5),y2:ys(.5),class:'grid'},svg);txt(svg,L-8,ys(.5)+5,'50%','lbl','end');
+  function curve(k,cls){const pts=[];for(let i=0;i<=80;i++){const u=i/80;pts.push([xs(u),ys(Math.exp(-k*u))])}const p=el('path',{d:'M'+pts.map(q=>q.join(' ')).join(' L '),class:cls},svg);const len=p.getTotalLength();p.style.strokeDasharray=len;p.style.strokeDashoffset=len;p.style.transition='stroke-dashoffset 2.6s var(--ease)';return p}
+  const slow=curve(1.6,'line ink'),fast=curve(7,'line');
+  const l1=txt(svg,xs(.62),ys(Math.exp(-1.6*.62))-12,'pre-agent era','lbl','start');const l2=txt(svg,xs(.2),ys(Math.exp(-7*.2))-12,'agent era','val amber','start');
+  later(()=>{slow.style.strokeDashoffset=0},300);later(()=>{fast.style.transition='stroke-dashoffset 1.2s var(--ease)';fast.style.strokeDashoffset=0},1400);
+};
+
+/* Scene 27: transcript */
+ANIM.transcript=s=>{const rows=$$('#tr div');rows.forEach(r=>r.classList.remove('on'));rows.forEach((r,i)=>later(()=>r.classList.add('on'),300+i*(i===rows.length-1?700:420)))};
+
+/* Hidden: GDP */
+ANIM.gdp=s=>{
+  const svg=$('#gdp');clear(svg);const W=1180,H=420,L=90,R=60,T=30,B=60,ymax=8;
+  const yrs=[2019,2020,2021,2022,2023,2024,2025,2026,2027,2028,2029];const ai=[0.3,0.35,0.45,0.5,0.6,0.9,1.4,2.2,3.1,3.0,3.0];
+  const xs=i=>L+i*((W-L-R)/(yrs.length-1)),ys=v=>H-B-(v/ymax)*(H-T-B);
+  [0,2,4,6,8].forEach(v=>{el('line',{x1:L,x2:W-R,y1:ys(v),y2:ys(v),class:'grid'},svg);txt(svg,L-14,ys(v)+5,v+'%','lbl','end')});
+  yrs.forEach((y,i)=>txt(svg,xs(i),H-B+28,y,'lbl','middle'));
+  const ref=(v,label)=>{el('line',{x1:L,x2:W-R,y1:ys(v),y2:ys(v),class:'line dim'},svg);txt(svg,W-R,ys(v)-8,label,'lbl','end')};
+  ref(6.6,'US housing boom peak, 2005 · 6.6%');el('line',{x1:L,x2:W-R,y1:ys(6),y2:ys(6),class:'line dim'},svg);txt(svg,W-R,ys(6)+24,'US railroads, 1880s · ~6% (UK 1840s >7%)','lbl','end');ref(1.2,'telecom / fibre peak, 2000 · 1.2%');
+  const pts=ai.map((v,i)=>[xs(i),ys(v)]);const p=el('path',{d:'M'+pts.map(q=>q.join(' ')).join(' L '),class:'line'},svg);const len=p.getTotalLength();p.style.strokeDasharray=len;p.style.strokeDashoffset=len;p.style.transition='stroke-dashoffset 2.4s var(--ease)';
+  txt(svg,xs(8),ys(3.1)-16,'AI capex · 3.1% (2027F)','val amber','middle');txt(svg,xs(6),ys(1.4)+24,'1.4% (2025)','val','middle');
+  later(()=>p.style.strokeDashoffset=0,300);
+};
+
+/* ---------- boot ---------- */
+applyTrack();
+if(FREE){
+  document.body.classList.add('free');
+  flow.forEach(s=>{s.classList.add('active');const fn=ANIM[s.dataset.anim];if(fn)fn(s);const n=+s.dataset.beats||0;for(let b=1;b<=n;b++)doBeat(s,b)});
+}else{
+  const h=location.hash.replace('#','');const start=Math.max(0,flow.findIndex(s=>s.id===h));
+  showScene(start);
+  later(()=>{$('#help').style.opacity=0.35},12000);
+}
+window.addEventListener('resize',()=>{if(!FREE){const s=flow[idx];if(s&&s.dataset.anim==='orbit')ANIM.orbit(s)}});
+})();
+</script>
+</body>
+</html>
