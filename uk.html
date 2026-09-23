@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>if(!/[?&]track=/.test(location.search))history.replaceState(null,"",location.pathname+"?track=uk"+location.hash);</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>if(!/[?&]track=/.test(location.search))history.replaceState(null,"",location.pathname+"?track=uk"+location.hash);</script>
 <title>The Raw Material of Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -94,15 +94,23 @@ span.trk.show{display:inline}
 .wh{position:absolute;right:7vw;bottom:8vh;font-family:var(--mono);font-size:clamp(16px,1.4vw,22px);color:var(--amber);letter-spacing:.08em;opacity:0;transition:opacity 1.2s}
 .wh.on{opacity:1}
 
-/* ---------- journey line ---------- */
-.journey{width:100%;height:auto;overflow:visible}
-.journey .path{stroke:var(--amber);stroke-width:2;fill:none;stroke-dasharray:2000;stroke-dashoffset:2000;transition:stroke-dashoffset 3.2s var(--ease)}
-.on .journey .path,.scene.active .journey.go .path{stroke-dashoffset:0}
-.journey .node{fill:var(--bg);stroke:var(--amber);stroke-width:2;opacity:0;transition:opacity .4s}
-.journey .lbl{fill:var(--muted);font-family:var(--mono);font-size:19px;letter-spacing:.06em;opacity:0;transition:opacity .5s}
-.journey.go .node,.journey.go .lbl{opacity:1}
-.journey .node.pulse{animation:pulse 1.2s var(--ease) 1}
-@keyframes pulse{0%{r:6}40%{r:14}100%{r:6}}
+/* ---------- journey (two supply chains) ---------- */
+.journey{width:100%;height:auto;overflow:visible;display:block}
+.journey .rail{fill:none;stroke-width:2;stroke-linecap:round}
+.journey .rail.data{stroke:#8f8a80}
+.journey .rail.power{stroke:var(--amber)}
+.journey .node{fill:var(--bg);stroke-width:2;opacity:0;transition:opacity .4s}
+.journey .node.d{stroke:#c9c4ba}.journey .node.p{stroke:var(--amber)}
+.journey .lbl{fill:var(--muted);font-family:var(--mono);font-size:17px;letter-spacing:.05em;opacity:0;transition:opacity .5s}
+.journey .lbl.k{fill:var(--ink)}
+.journey .lbl.v{fill:var(--amber);font-size:15px}
+.journey .lbl.on,.journey .node.on{opacity:1}
+.journey .chip{fill:#141418;stroke:#6a655c;stroke-width:2;transition:fill .6s,stroke .6s}
+.journey .chip.hot{fill:var(--amber);stroke:var(--amber)}
+.journey .jrack{fill:#111114;stroke:#6a655c;stroke-width:1.5}
+.journey .dot{fill:#F2EFE8}
+.journey .edot{fill:var(--amber)}
+.journey .out{fill:none;stroke-width:2;stroke-linecap:round}
 
 /* ---------- charts ---------- */
 svg text{font-family:var(--mono);fill:var(--muted);font-size:18px;letter-spacing:.03em}
@@ -298,14 +306,12 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
   <div class="wh" id="t1wh">0.3 Wh</div>
 </section>
 
-<section class="scene" id="s2" data-anim="journey" data-beats="0">
+<section class="scene" id="s2" data-anim="journey" data-beats="1">
   <div class="wrap">
     <p class="eyebrow fade">Two seconds</p>
-    <h1 class="fade d1">Here is what just happened.</h1>
-    <svg class="journey" id="j1" viewBox="0 0 1180 200" style="margin-top:6vh">
-      <path class="path" d="M20 120 H1160"/>
-      <g class="nodes"></g>
-    </svg>
+    <h2 class="fade d1">Two supply chains. One chip.</h2>
+    <svg class="journey" id="j1" viewBox="0 0 1180 470" style="margin-top:2vh;max-height:52vh"></svg>
+    <p class="lead" data-beat="1" style="margin-top:0;max-width:40em"><strong>Your question and your megawatt-hour meet at 0.8 volts.</strong> Everyone in this room runs one of the two chains.</p>
   </div>
 </section>
 
@@ -872,7 +878,7 @@ document.addEventListener('keydown',e=>{
   else if(k==='s'||k==='S'){showHidden('ss')}
   else if(k==='g'||k==='G'){showHidden('sg')}
   else if(k==='h'||k==='H'){$('#hud').style.display=$('#hud').style.display==='none'?'':'none';$('#help').style.display=$('#hud').style.display}
-  else if(k==='Escape'){if(hiddenFrom!==null)backFromHidden()}
+  else if(k==='Escape'){if(hiddenFrom!==null)backFromHidden();}
   else if(k==='f'||k==='F'){if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen()}
 });
 document.addEventListener('click',e=>{
@@ -912,12 +918,53 @@ BEAT.cursor2=(s,b)=>{
   if(b===3){const r=$('#twhres');tween(1800,p=>{r.textContent=Math.round(42*p)+' TWh'})}
 };
 
-/* Scene 2: journey */
+/* Scene 2: journey — two supply chains meet at the chip */
 ANIM.journey=s=>{
-  const svg=$('#j1');svg.classList.remove('go');const g=$('.nodes',svg);clear(g);
-  const nodes=['fibre','substation','transformer','rack','GPU','memory','back'];
-  nodes.forEach((n,i)=>{const x=20+i*(1140/(nodes.length-1));el('circle',{cx:x,cy:120,r:6,class:'node'},g);txt(g,x,i%2?80:165,n,'lbl',i===0?'start':i===nodes.length-1?'end':'middle')});
-  later(()=>{svg.classList.add('go');$$('.node',svg).forEach((c,i)=>later(()=>{c.classList.add('pulse');later(()=>c.classList.remove('pulse'),1300)},300+i*460))},400);
+  const svg=$('#j1');clear(svg);
+  const defs=el('defs',{},svg);
+  const f=el('filter',{id:'jglow',x:'-60%',y:'-60%',width:'220%',height:'220%'},defs);el('feGaussianBlur',{stdDeviation:'6',result:'b'},f);const m=el('feMerge',{},f);el('feMergeNode',{in:'b'},m);el('feMergeNode',{in:'SourceGraphic'},m);
+  const hg=el('linearGradient',{id:'heatg',x1:'0',y1:'0',x2:'1',y2:'0'},defs);el('stop',{offset:'0','stop-color':'#F5A623'},hg);el('stop',{offset:'1','stop-color':'#c9391a'},hg);
+  const YT=90,YB=380,RX=700,CX=850,CY=235;
+  // rails
+  const dRail=el('path',{d:`M40 ${YT} H600 C660 ${YT} 660 ${CY-20} ${RX-10} ${CY-20}`,class:'rail data'},svg);
+  const pRail=el('path',{d:`M40 ${YB} H600 C660 ${YB} 660 ${CY+20} ${RX-10} ${CY+20}`,class:'rail power'},svg);
+  const bridge=el('path',{d:`M${RX+30} ${CY} H${CX-45}`,class:'rail power'},svg);
+  [dRail,pRail,bridge].forEach(p=>{const L=p.getTotalLength();p.style.strokeDasharray=L;p.style.strokeDashoffset=L});
+  // rack
+  const rack=el('g',{},svg);el('rect',{x:RX-10,y:CY-70,width:40,height:140,rx:2,class:'jrack'},rack);
+  for(let i=0;i<9;i++)el('rect',{x:RX-4,y:CY-62+i*15,width:28,height:9,fill:'#26262b'},rack);
+  const rl=txt(svg,RX+10,CY+96,'rack','lbl k','middle');const rv=txt(svg,RX+10,CY+118,'48 V busbar','lbl v','middle');
+  // chip
+  const chip=el('rect',{x:CX-45,y:CY-45,width:90,height:90,rx:6,class:'chip'},svg);
+  for(let i=0;i<6;i++){el('line',{x1:CX-45,x2:CX-55,y1:CY-35+i*14,y2:CY-35+i*14,stroke:'#6a655c','stroke-width':2},svg);el('line',{x1:CX+45,x2:CX+55,y1:CY-35+i*14,y2:CY-35+i*14,stroke:'#6a655c','stroke-width':2},svg)}
+  const cl=txt(svg,CX,CY+76,'chip','lbl k','middle');const cv=txt(svg,CX,CY+98,'0.8 V · ~1,000 A','lbl v','middle');
+  // nodes + labels
+  const D=[[70,'your phone'],[230,'base station'],[390,'fibre'],[550,'data centre']];
+  const P=[[70,'power station','400 kV'],[230,'grid'],[390,'substation','33 kV'],[550,'transformer','415 V']];
+  const dn=D.map(([x,n])=>{const c=el('circle',{cx:x,cy:YT,r:6,class:'node d'},svg);const t=txt(svg,x,YT-24,n,'lbl','middle');return [c,t]});
+  const pn=P.map(([x,n,v])=>{const c=el('circle',{cx:x,cy:YB,r:6,class:'node p'},svg);const t=txt(svg,x,YB+32,n,'lbl','middle');const u=v?txt(svg,x,YB+54,v,'lbl v','middle'):null;return [c,t,u]});
+  const dl=txt(svg,40,YT-56,'THE QUESTION','lbl','start');dl.setAttribute('font-size','13');dl.setAttribute('letter-spacing','.16em');
+  const pl=txt(svg,40,YB+86,'THE ELECTRICITY','lbl v','start');pl.setAttribute('font-size','13');pl.setAttribute('letter-spacing','.16em');
+  // outputs
+  const tokOut=el('path',{d:`M${CX+55} ${CY-20} C${CX+120} ${CY-20} ${CX+120} ${YT} ${CX+190} ${YT} H1140`,class:'out',stroke:'#c9c4ba'},svg);
+  const heatOut=el('path',{d:`M${CX+55} ${CY+20} C${CX+120} ${CY+20} ${CX+120} ${YB} ${CX+190} ${YB} H1140`,class:'out',stroke:'url(#heatg)'},svg);
+  [tokOut,heatOut].forEach(p=>{const L=p.getTotalLength();p.style.strokeDasharray=L;p.style.strokeDashoffset=L});
+  const t1=txt(svg,1140,YT-24,'tokens · back to your phone','lbl k','end');const t2=txt(svg,1140,YT+34,'2 seconds','lbl','end');
+  const h1=txt(svg,1140,YB+32,'heat','lbl k','end');const h2=txt(svg,1140,YB+54,'0.3 Wh · almost every joule','lbl v','end');
+  const mover=(path,cls,r)=>{const c=el('circle',{r,class:cls,opacity:0},svg);const L=path.getTotalLength();return (p)=>{const q=path.getPointAtLength(L*p);c.setAttribute('cx',q.x);c.setAttribute('cy',q.y);c.setAttribute('opacity',p>0&&p<1?1:0)}};
+  // sequence
+  later(()=>{[dRail,pRail].forEach(p=>{p.style.transition='stroke-dashoffset 1.6s var(--ease)';p.style.strokeDashoffset=0});
+    dn.forEach(([c,t],i)=>later(()=>{c.classList.add('on');t.classList.add('on')},200+i*300));
+    pn.forEach(([c,t,u],i)=>later(()=>{c.classList.add('on');t.classList.add('on');if(u)u.classList.add('on')},200+i*300));
+    later(()=>{dl.classList.add('on');pl.classList.add('on');rl.classList.add('on');rv.classList.add('on')},1400);
+  },300);
+  later(()=>{const md=mover(dRail,'dot',7);const me=[0,.12,.24].map(o=>mover(pRail,'edot',5));
+    tween(2200,(p,raw)=>{md(raw);me.forEach((f,i)=>f(Math.max(0,raw-i*0.06)))},()=>{me.forEach(f=>f(1));
+      bridge.style.transition='stroke-dashoffset .5s linear';bridge.style.strokeDashoffset=0;
+      later(()=>{chip.classList.add('hot');chip.setAttribute('filter','url(#jglow)');cl.classList.add('on');cv.classList.add('on')},500);
+      later(()=>{tokOut.style.transition='stroke-dashoffset 1s var(--ease)';tokOut.style.strokeDashoffset=0;const mt=mover(tokOut,'dot',7);tween(1000,(p,raw)=>mt(raw));later(()=>{t1.classList.add('on');t2.classList.add('on')},800)},1000);
+      later(()=>{heatOut.style.transition='stroke-dashoffset 1.6s var(--ease)';heatOut.style.strokeDashoffset=0;later(()=>{h1.classList.add('on');h2.classList.add('on')},1200)},1300);
+    })},2200);
 };
 
 /* Scene 3b: capex */
