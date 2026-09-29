@@ -185,7 +185,9 @@ svg .grid{stroke:var(--line);stroke-dasharray:2 5}
 .layer small{font-family:var(--mono);font-size:14px;color:var(--muted);letter-spacing:.04em;font-weight:400}
 .layer.energy{border-color:var(--amber);color:var(--amber);background:var(--amber-dim)}
 .layer .you{font-family:var(--mono);font-size:14px;color:var(--amber);letter-spacing:.08em}
-.stack.flip{flex-direction:column-reverse}
+.layer.energy{display:grid;grid-template-columns:1fr auto;grid-template-rows:0fr;padding-top:0;padding-bottom:0;border-width:0;opacity:0;transition:grid-template-rows .9s var(--ease),padding .9s var(--ease),opacity .6s .3s,border-width .1s}
+.layer.energy>*{min-height:0;overflow:hidden}
+.stack.go .layer.energy{grid-template-rows:1fr;padding:1.6vh 1.6vw;border-width:1px;opacity:1}
 
 /* ---------- campus ---------- */
 .eq{list-style:none;margin:3vh 0 0;padding:0;font-size:clamp(16px,1.45vw,22px);line-height:1.35;color:var(--muted)}
@@ -246,6 +248,19 @@ svg .grid{stroke:var(--line);stroke-dasharray:2 5}
 .kpi .v{font-family:var(--display);font-weight:600;font-size:clamp(48px,7vw,120px);letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums}
 .kpi .l{color:var(--muted);margin-top:1.4vh;font-size:clamp(16px,1.4vw,21px);line-height:1.4;max-width:18em}
 
+/* ---------- flex ---------- */
+.flexk{display:flex;align-items:baseline;gap:.6em;margin-top:.6vh;font-size:clamp(14px,1.2vw,18px);line-height:1.35;color:var(--muted)}
+.flexk small{font-family:var(--mono);font-size:.8em;color:var(--faint);letter-spacing:.03em}
+.flexk b{font-family:var(--display);font-weight:600;font-size:clamp(30px,3.2vw,50px);letter-spacing:-.03em;color:var(--amber);line-height:1;flex:0 0 auto}
+.flexpanels .step{margin-top:.8vh}
+svg .flexline{fill:none;stroke:var(--amber);stroke-width:3;stroke-linejoin:round}
+svg .flexbase{fill:none;stroke:var(--faint);stroke-width:1.5;stroke-dasharray:4 5}
+svg .flexev{fill:rgba(245,166,35,.08)}
+
+.qrbox{width:min(62vh,520px);height:min(62vh,520px);padding:min(3vh,24px);background:#fff;border-radius:6px}
+.qrbox .qr{width:100%;height:100%;display:block}
+.qrbox .qr path{stroke:#0B0B0D}
+
 /* ---------- jevons ---------- */
 .two{display:grid;grid-template-columns:1fr 1fr;gap:6vw;align-items:center}
 .pulseA{animation:shrink 3s var(--ease) infinite alternate}
@@ -259,6 +274,9 @@ svg .grid{stroke:var(--line);stroke-dasharray:2 5}
 .moat svg{width:64px;height:64px;display:block;margin-bottom:2vh}
 .moat h3{font-family:var(--display);font-size:clamp(24px,2.6vw,40px);font-weight:500;margin:0;letter-spacing:-.02em}
 .moat p{color:var(--muted);font-size:clamp(16px,1.45vw,22px);line-height:1.45;margin:1vh 0 0}
+.moat ul{list-style:none;margin:1.4vh 0 0;padding:0;color:var(--muted);font-size:clamp(16px,1.4vw,21px);line-height:1.45}
+.moat li{padding:.45em 0;border-top:1px dashed var(--line)}
+.moat li:first-child{color:var(--ink);border-top:0}
 
 /* ---------- transcript ---------- */
 .tr{font-family:var(--mono);font-size:clamp(16px,1.6vw,24px);line-height:1.7;max-width:46em}
@@ -267,6 +285,24 @@ svg .grid{stroke:var(--line);stroke-dasharray:2 5}
 .tr .r{color:var(--ink);font-weight:500}
 .tr div{opacity:0;transform:translateY(6px);transition:opacity .4s,transform .5s var(--ease)}
 .tr div.on{opacity:1;transform:none}
+
+/* ---------- asks (haggl cards) ---------- */
+.asks{width:100%;max-width:34rem;margin-left:auto}
+.asks-stack{height:min(52vh,460px);display:flex;flex-direction:column;justify-content:flex-end;gap:12px;overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 34%);mask-image:linear-gradient(transparent,#000 34%)}
+.ask{flex-shrink:0;display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .6s var(--ease),opacity .5s}
+.ask.in{grid-template-rows:1fr;opacity:1}
+.ask-in{overflow:hidden;min-height:0}
+.ask-card{background:#1c1c1a;border:1px solid #3a3a35;border-radius:2px;padding:16px 18px 18px}
+.ask:last-child .ask-card{border-color:#8a8a82;box-shadow:8px 8px 0 #242420}
+.ask.in.dim1{opacity:.6}.ask.in.dim2{opacity:.3}
+.ask-meta{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;font-family:var(--sans);font-size:13px;color:#b8b8b0}
+.ask-meta b{color:#fafaf8;font-weight:600}
+.ask-who:before{content:"·";margin-right:8px;color:#9a9a92}
+.ask-where{margin-left:auto;white-space:nowrap;color:#9a9a92}
+.ask-q{margin:10px 0 0;font-family:var(--sans);font-size:clamp(17px,1.5vw,22px);line-height:1.35;font-weight:600;letter-spacing:-.02em;min-height:1.35em;color:#fafaf8}
+.ask .caret{display:inline-block;width:2px;height:1.05em;margin-left:2px;vertical-align:-.15em;background:#ff4a1c;animation:blink 1s steps(1) infinite}
+.ask.sent .caret{display:none}
+.mt{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:4px;overflow:hidden;font-family:var(--mono);font-size:11px;font-weight:700;color:#fff}
 
 /* ---------- axes columns ---------- */
 .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:3vw}
@@ -309,13 +345,12 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 <section class="scene" id="s2" data-anim="journey" data-beats="1">
   <div class="wrap">
     <p class="eyebrow fade">Two seconds</p>
-    <h2 class="fade d1">Two supply chains. One chip.</h2>
+    <h2 class="fade d1" id="j1h">Two seconds. Here is what just happened.</h2>
     <svg class="journey" id="j1" viewBox="0 0 1180 470" style="margin-top:2vh;max-height:52vh"></svg>
-    <p class="lead" data-beat="1" style="margin-top:0;max-width:40em"><strong>Your question and your megawatt-hour meet at 0.8 volts.</strong> Everyone in this room runs one of the two chains.</p>
   </div>
 </section>
 
-<section class="scene" id="s3b" data-anim="capex" data-beats="1">
+<section class="scene" id="s3b" data-anim="capex" data-beats="2">
   <div class="wrap">
     <p class="eyebrow fade">The biggest bet in the history of technology</p>
     <div id="capexA">
@@ -326,8 +361,12 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
       <h2>Spend per year, 2025 dollars.</h2>
       <svg class="chart" id="capexBars" viewBox="0 0 1180 440" style="margin-top:3vh"></svg>
     </div>
+    <div id="capexC" style="display:none">
+      <h2>Peak investment, share of GDP.</h2>
+      <svg class="chart" id="capexGdp" viewBox="0 0 1180 470" style="margin-top:3vh"></svg>
+    </div>
   </div>
-  <div class="cap">Platformonomics · TrueUp · Epoch AI · Goldman Sachs (Aug 2026) · Planetary Society · Guinness · Sparkline. Programme totals in 2025 USD, ±10%.</div>
+  <div class="cap">Platformonomics · TrueUp · Epoch AI · Goldman Sachs (Aug 2026) · Planetary Society · Guinness · Sparkline · Apollo / Torsten Slok (Aug 2026) · Odlyzko. Programme totals in 2025 USD, ±10%; GDP shares at peak year of the host economy.</div>
 </section>
 
 <!-- ================= ACT 1 ================= -->
@@ -355,13 +394,13 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
     <h2 class="fade d1">The arithmetic is cheap.<br>Moving the weights is not.</h2>
     <svg class="chart" id="mw" viewBox="0 0 1180 230" style="margin-top:3vh;max-width:1000px"></svg>
     <p class="lead" data-beat="1">Inside an AI accelerator, <strong>moving data is ~47% of the energy; the multiplies are ~8%</strong>. And every token moves the whole model — a trillion numbers, out of memory, through the chip, and back. That is why racks became 200 kW of memory and interconnect around the GPUs.</p>
-    <p class="lead" data-beat="2">Energy per token falls ~10× a year. <strong>Tokens per answer rise faster.</strong></p>
+    <p class="lead" data-beat="2">Energy per token falls fast. <strong>Tokens rise faster — and each token gets heavier.</strong></p>
   </div>
   <div class="cap">MAC: Google TPU, 7 nm, BF16 0.32 pJ (Jouppi et al., 2021). HBM: ~4 pJ/bit at the stack (NVIDIA, MICRO 2017); ~12 pJ/bit effective on an H100 system (2026 calibration) → the real gap is ~400×. Energy split: Dally, NVIDIA, Hot Chips 2023.</div>
 </section>
 
 
-<section class="scene" id="s6" data-anim="tokens" data-beats="1">
+<section class="scene" id="s6" data-track="off" data-anim="tokens" data-beats="2">
   <div class="wrap">
     <p class="eyebrow fade">Training vs inference</p>
     <div id="s6a" class="duo">
@@ -401,12 +440,13 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
     <div id="s6b" style="display:none">
       <h2>Google, tokens per month</h2>
       <svg class="chart" id="tokChart" viewBox="0 0 1180 440" style="margin-top:2vh"></svg>
+      <p class="lead" data-beat="2" style="margin-top:1vh;max-width:46em"><span class="amber">Tokens ×7.</span> Energy per median prompt <span class="amber">÷33.</span> Electricity <span class="amber">+37%.</span> The reconciliation: the average token got heavier — reasoning, long context, video — and the fleet is built ahead of demand.</p>
     </div>
   </div>
   <div class="cap">Google I/O, May 2026 · Alphabet Q2 2026 call</div>
 </section>
 
-<section class="scene" id="s6b" data-anim="" data-beats="3">
+<section class="scene" id="s6b" data-track="off" data-anim="" data-beats="3">
   <div class="wrap">
     <p class="eyebrow fade">What comes next · continual learning</p>
     <h2 class="fade d1">Today the model is frozen after training.<br>Tomorrow it never stops learning.</h2>
@@ -418,7 +458,7 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
   </div>
 </section>
 
-<section class="scene center" id="s7" data-anim="orbit" data-beats="0">
+<section class="scene center" id="s7" data-track="off" data-anim="orbit" data-beats="0">
   <div class="wrap">
     <div class="orbit">
       <div class="ring"></div>
@@ -441,19 +481,19 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
   <div class="wrap">
     <p class="eyebrow fade">The stack</p>
     <div class="stack fade d1" id="stack">
-      <div class="layer">Applications <span class="you" id="youtop">← you work here</span></div>
+      <div class="layer">Applications <small>agents · copilots · search</small></div>
       <div class="layer">Foundation models <small>GPT · Claude · Gemini · Grok · DeepSeek</small></div>
       <div class="layer">Cloud <small>AWS · Azure · Google Cloud · Oracle</small></div>
       <div class="layer">Data centres <small>power · cooling · optics · mechanics</small></div>
       <div class="layer">Semiconductors <small>NVIDIA · TSMC · ASML · SK hynix</small></div>
-      <div class="layer energy">Energy <span class="you" id="youbot" style="opacity:0">← you work here</span></div>
+      <div class="layer energy" id="elayer">Energy <span class="you" id="youbot">← you work here</span></div>
     </div>
     <p class="lead" data-beat="1"><strong>No electrons, no AI.</strong> The bottom is where the constraint moved.</p>
   </div>
 </section>
 
 <!-- ================= ACT 2 ================= -->
-<section class="scene" id="s9" data-anim="campus" data-beats="4">
+<section class="scene" id="s9" data-track="off" data-anim="campus" data-beats="4">
   <div class="wrap">
     <div style="display:grid;grid-template-columns:minmax(16em,31%) 1fr;gap:2vw;align-items:center">
       <div>
@@ -507,7 +547,7 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
   <div class="cap">Google fleet PUE 1.09 (2025) · Uptime Institute global survey (average). PUE = total site electricity ÷ chip electricity.</div>
 </section>
 
-<section class="scene" id="e1" data-track="uk" data-anim="" data-beats="2">
+<section class="scene" id="e1" data-track="off" data-anim="" data-beats="2">
   <div class="wrap">
     <p class="eyebrow fade"><b>Extension</b> · Cooling & water</p>
     <h2 class="fade d1">Direct-to-chip. Immersion. And the fight nobody planned for.</h2>
@@ -627,20 +667,27 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 </section>
 
 
-<section class="scene" id="s19" data-anim="flex" data-beats="0">
+<section class="scene" id="s19" data-anim="flex" data-beats="1">
   <div class="wrap">
     <p class="eyebrow fade">The load is not dumb</p>
-    <div class="two">
-      <div class="fade d1"><div class="big amber" id="f1">−25%</div><div class="step">for 3 hours · Phoenix, Oracle / EPRI DCFlex</div></div>
-      <div class="fade d2"><div class="big amber" id="f2">−40%</div><div class="step">in under a minute · London, Nebius / Emerald AI</div></div>
+    <h2 class="fade d1" style="font-size:clamp(26px,3.2vw,52px)">An AI campus can cut its power draw on request — and keep working.</h2>
+    <div class="two flexpanels" style="margin-top:2vh;align-items:start;gap:4vw">
+      <div class="fade d2">
+        <svg class="chart" id="flexA" viewBox="0 0 560 250"></svg>
+        <div class="flexk"><b id="f1">−25%</b> <span>of site power draw · held for 3 hours · workloads kept running<br><small>Phoenix · Oracle data centre · EPRI DCFlex trial, 2025</small></span></div>
+      </div>
+      <div class="fade d3">
+        <svg class="chart" id="flexB" viewBox="0 0 560 250"></svg>
+        <div class="flexk"><b id="f2">−40%</b> <span>of site power draw · in under 60 seconds · 200+ grid events<br><small>London · Nebius data centre · Emerald AI trial, 2026</small></span></div>
+      </div>
     </div>
-    <p class="lead fade d3 trk em" style="margin-top:5vh">A 1 GW campus with a 25% flex band is a <strong>250 MW battery-equivalent that never degrades</strong>. Who trades it? Who owns the optionality?</p>
-    <p class="lead fade d3 trk uk" style="margin-top:5vh">The customer of the decade is also a flexible asset — <strong>if you write the contract that way.</strong></p>
+    <p class="lead trk em" data-beat="1" style="margin-top:2vh;max-width:44em">A 1 GW campus with a 25% flex band is a <strong>250 MW battery-equivalent that never degrades</strong>. Who trades it? Who owns the optionality?</p>
+    <p class="lead trk uk" data-beat="1" style="margin-top:2vh;max-width:44em">Google has <strong>1 GW</strong> of this under contract with five utilities. The customer of the decade is also a flexible asset — <strong>if you write the contract that way.</strong></p>
   </div>
-  <div class="cap">Google, Mar 2026 (1 GW demand response, five utilities) · NVIDIA / Emerald AI case study · Duke University, Feb 2025</div>
+  <div class="cap">EPRI DCFlex / NVIDIA–Emerald AI case study (site power, % of normal, workloads rescheduled or slowed, not dropped) · Google, Mar 2026 · Duke University, Feb 2025</div>
 </section>
 
-<section class="scene" id="s20" data-anim="kpis" data-beats="0">
+<section class="scene" id="s20" data-track="off" data-anim="kpis" data-beats="0">
   <div class="wrap">
     <p class="eyebrow fade">ENGIE's own number · H1 2026</p>
     <div class="kpis">
@@ -696,7 +743,7 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 </section>
 
 <!-- ================= ACT 5 · MOATS ================= -->
-<section class="scene" id="s24" data-anim="halflife" data-beats="0">
+<section class="scene" id="s24" data-track="off" data-anim="halflife" data-beats="0">
   <div class="wrap">
     <div class="two">
       <div>
@@ -724,37 +771,35 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
     <div class="moats" style="margin-top:2vh">
       <div class="moat" data-beat="1">
         <svg viewBox="0 0 64 64"><rect x="8" y="12" width="48" height="8" fill="var(--amber)"/><rect x="8" y="28" width="36" height="8" fill="var(--muted)"/><rect x="8" y="44" width="24" height="8" fill="var(--faint)"/></svg>
-        <h3>Data</h3><p>You have it. They don't. Turbine data that anticipates wear-out before it fails. Storage telemetry that dispatches the asset on the market at its exact physical limit. It compounds with every contract and every dispatch.</p>
+        <h3>Data</h3><ul><li>You have it. They don't.</li><li>Turbine data that anticipates wear-out before it fails</li><li>Storage telemetry that dispatches the asset at its exact physical limit</li><li>Compounds with every contract and every dispatch</li></ul>
       </div>
       <div class="moat" data-beat="2">
         <svg viewBox="0 0 64 64"><path d="M8 56 L20 16 L28 40 L36 12 L48 56 Z" fill="none" stroke="var(--ink)" stroke-width="2"/><path d="M4 56 H60" stroke="var(--amber)" stroke-width="3"/></svg>
-        <h3>Steel</h3><p>Gigawatts of generation, batteries, a network. A lean entrant cannot rent these.</p>
+        <h3>Steel</h3><ul><li>Gigawatts of generation</li><li>Batteries</li><li>A network</li><li>A lean entrant cannot rent these</li></ul>
       </div>
       <div class="moat" data-beat="3">
         <svg viewBox="0 0 64 64"><path d="M6 44 C24 44 30 20 58 20" fill="none" stroke="var(--muted)" stroke-width="2"/><path d="M6 44 C24 44 30 36 58 36" fill="none" stroke="var(--amber)" stroke-width="3"/></svg>
-        <h3>Position</h3><p>You are on the supply side of the token / MWh spread. The hyperscalers are on the demand side — and they are short.</p>
+        <h3>Position</h3><ul><li>You are on the supply side of the token / MWh spread</li><li>The hyperscalers are on the demand side</li><li>And they are short</li></ul>
       </div>
     </div>
   </div>
 </section>
 
-<section class="scene" id="s27" data-anim="transcript" data-beats="0">
+<section class="scene" id="s27" data-anim="asks" data-beats="1">
   <div class="wrap">
-    <p class="eyebrow fade">7 words in. 46% out.</p>
-    <div class="tr" id="tr">
-      <div><span class="u">&gt; Negotiate a better deal on my electricity.</span></div>
-      <div class="s">· Searched Gmail for energy billing emails</div>
-      <div class="s">· Retrieved supplier invoices and payment history</div>
-      <div class="s">· Extracted amounts, verified DKIM headers</div>
-      <div class="s">· Fetched marketplace negotiation schema</div>
-      <div class="s">· Matched to ICP: €85.9/mo target tariff</div>
-      <div class="r">Submitted. Target €85.9/mo — potential <span class="amber">46%</span> reduction.</div>
+    <p class="eyebrow fade">The buyer is getting an agent too</p>
+    <div class="two" style="align-items:center;gap:4vw">
+      <div>
+        <h2 class="fade d1">What customers already ask their assistants.</h2>
+        <p class="lead trk em" data-beat="1" style="margin-top:4vh">The sticky retail base you hedge against becomes <strong>elastic</strong>. Industrial counterparties run procurement agents against you.</p>
+        <p class="lead trk uk" data-beat="1" style="margin-top:4vh">In UK B2B the exposed surface is the broker: <strong>~70%</strong> of SME switches, commission in the unit rate. <strong>An agent eats exactly what a broker sells.</strong></p>
+      </div>
+      <div class="asks fade d2" id="asks"><div class="asks-stack" id="asksStack"></div></div>
     </div>
-    <p class="lead trk em" style="margin-top:4vh">The sticky retail base you hedge against becomes <strong>elastic</strong>. Industrial counterparties run procurement agents against you.</p>
-    <p class="lead trk uk" style="margin-top:4vh">In UK B2B the exposed surface is the broker: <strong>~70%</strong> of SME switches, commission in the unit rate. An agent eats exactly what a broker sells.</p>
   </div>
-  <div class="cap">Live run on an open-source agent, spring 2026 · Ofgem (broker figures)</div>
+  <div class="cap">Prompts as shown on haggl.ai · Ofgem (broker figures)</div>
 </section>
+
 
 <section class="scene" id="s28" data-anim="" data-beats="3">
   <div class="wrap">
@@ -777,6 +822,15 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
       <p class="lead fade d3" data-beat="1" style="margin:4vh auto 0">And one thing changed this year: <strong>your commodity is now the raw material of theirs.</strong> Use that.</p>
     </div>
     <p class="attrib fade d4" style="margin-top:6vh">Questions, pushback and disagreement welcome.</p>
+  </div>
+</section>
+
+<section class="scene center" id="s30" data-anim="" data-beats="0">
+  <div class="wrap" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
+    <div class="qrbox fade"><svg class="qr" viewBox="0 0 29 29" shape-rendering="crispEdges"><path stroke="#F2EFE8" d="M0 0.5h7m3 0h2m2 0h1m2 0h3m2 0h7M0 1.5h1m5 0h1m1 0h1m1 0h1m2 0h1m4 0h3m1 0h1m5 0h1M0 2.5h1m1 0h3m1 0h1m2 0h2m1 0h1m2 0h1m3 0h2m1 0h1m1 0h3m1 0h1M0 3.5h1m1 0h3m1 0h1m2 0h3m1 0h1m4 0h2m2 0h1m1 0h3m1 0h1M0 4.5h1m1 0h3m1 0h1m1 0h2m3 0h1m2 0h4m2 0h1m1 0h3m1 0h1M0 5.5h1m5 0h1m4 0h2m1 0h6m2 0h1m5 0h1M0 6.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M9 7.5h3m4 0h3m1 0h1M0 8.5h1m1 0h1m1 0h1m1 0h1m2 0h2m1 0h1m2 0h6m3 0h1m2 0h1M1 9.5h1m1 0h3m2 0h2m2 0h2m7 0h2m2 0h1m2 0h1M1 10.5h2m2 0h3m1 0h3m2 0h1m2 0h1m2 0h2m4 0h3M0 11.5h3m1 0h1m2 0h1m5 0h2m1 0h3m1 0h2m2 0h1m2 0h1M0 12.5h1m1 0h2m2 0h1m4 0h2m1 0h4m1 0h4m2 0h1m1 0h2M1 13.5h1m1 0h1m4 0h1m1 0h2m2 0h1m1 0h1m3 0h4m1 0h1m2 0h1M1 14.5h1m1 0h1m2 0h1m1 0h1m4 0h1m4 0h1m4 0h1m1 0h1m1 0h2M4 15.5h1m3 0h1m1 0h3m4 0h3m5 0h1m1 0h1M0 16.5h4m2 0h1m1 0h5m3 0h2m1 0h5m1 0h1m1 0h2M4 17.5h1m4 0h1m1 0h3m2 0h1m3 0h3m2 0h2m1 0h1M0 18.5h1m1 0h2m2 0h1m2 0h1m1 0h2m1 0h1m1 0h2m2 0h2m1 0h1m3 0h2M1 19.5h1m3 0h1m2 0h2m1 0h1m1 0h3m1 0h1m1 0h4m2 0h1m1 0h1M0 20.5h1m2 0h2m1 0h1m3 0h2m2 0h5m1 0h5M8 21.5h1m1 0h3m1 0h1m1 0h1m2 0h2m3 0h1m1 0h3M0 22.5h7m6 0h1m2 0h2m1 0h2m1 0h1m1 0h2m1 0h2M0 23.5h1m5 0h1m2 0h4m2 0h1m1 0h2m1 0h1m3 0h2m2 0h1M0 24.5h1m1 0h3m1 0h1m1 0h2m2 0h1m4 0h1m2 0h5m3 0h1M0 25.5h1m1 0h3m1 0h1m2 0h1m1 0h1m1 0h1m2 0h3m5 0h1m1 0h3M0 26.5h1m1 0h3m1 0h1m1 0h3m1 0h1m1 0h1m2 0h4m2 0h3m2 0h1M0 27.5h1m5 0h1m2 0h1m1 0h1m3 0h1m1 0h1m1 0h4m1 0h1m2 0h1M0 28.5h7m1 0h2m3 0h2m1 0h2m1 0h3m1 0h3m1 0h2"/></svg>
+</div>
+    <p class="fade d2" style="font-family:var(--display);font-size:clamp(24px,2.6vw,40px);font-weight:500;letter-spacing:-.02em;margin:3vh 0 0">Raphael Cohen</p>
+    <p class="fade d3" style="font-family:var(--mono);font-size:clamp(14px,1.3vw,20px);color:var(--muted);letter-spacing:.06em;margin:1vh 0 0">linkedin.com/in/raphco</p>
   </div>
 </section>
 
@@ -812,7 +866,7 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 
 </div><!-- /stage -->
 <div id="hud"><span id="counter">1 / 29</span><span class="chip" id="trackchip">EM · 30</span></div>
-<div id="help"><kbd>click / →</kbd> next · <kbd>←</kbd> back · <kbd>T</kbd> track · <kbd>S</kbd> sources · <kbd>G</kbd> gdp · <kbd>H</kbd> hide</div>
+<div id="help"><kbd>click / →</kbd> next · <kbd>←</kbd> back · <kbd>1</kbd> first · <kbd>0</kbd> last · <kbd>T</kbd> track · <kbd>H</kbd> hide</div>
 
 <script>
 (function(){
@@ -872,8 +926,8 @@ document.addEventListener('keydown',e=>{
   const k=e.key;
   if(k==='ArrowRight'||k===' '||k==='PageDown'||k==='Enter'||k==='ArrowDown'){e.preventDefault();if(hiddenFrom!==null)backFromHidden();else next()}
   else if(k==='ArrowLeft'||k==='PageUp'||k==='Backspace'||k==='ArrowUp'){e.preventDefault();if(hiddenFrom!==null)backFromHidden();else prev()}
-  else if(k==='Home'){showScene(0)}
-  else if(k==='End'){showScene(flow.length-1)}
+  else if(k==='Home'||k==='1'){if(hiddenFrom!==null)hiddenFrom=null;showScene(0)}
+  else if(k==='End'||k==='0'){if(hiddenFrom!==null)hiddenFrom=null;showScene(flow.length-1,{allBeats:true})}
   else if(k==='t'||k==='T'){track=track==='em'?'uk':'em';const cur=flow[idx];applyTrack();const j=flow.indexOf(cur);showScene(j<0?0:j,{allBeats:true})}
   else if(k==='s'||k==='S'){showHidden('ss')}
   else if(k==='g'||k==='G'){showHidden('sg')}
@@ -952,25 +1006,36 @@ ANIM.journey=s=>{
   const t1=txt(svg,1140,YT-24,'tokens · back to your phone','lbl k','end');const t2=txt(svg,1140,YT+34,'2 seconds','lbl','end');
   const h1=txt(svg,1140,YB+32,'heat','lbl k','end');const h2=txt(svg,1140,YB+54,'0.3 Wh · almost every joule','lbl v','end');
   const mover=(path,cls,r)=>{const c=el('circle',{r,class:cls,opacity:0},svg);const L=path.getTotalLength();return (p)=>{const q=path.getPointAtLength(L*p);c.setAttribute('cx',q.x);c.setAttribute('cy',q.y);c.setAttribute('opacity',p>0&&p<1?1:0)}};
-  // sequence
-  later(()=>{[dRail,pRail].forEach(p=>{p.style.transition='stroke-dashoffset 1.6s var(--ease)';p.style.strokeDashoffset=0});
+  // sequence — beat 0: the question; beat 1 (click): the electricity
+  pn.forEach(([c,t,u])=>{c.style.display='none';t.style.display='none';if(u)u.style.display='none'});pl.style.display='none';rv.style.display='none';cv.style.display='none';h1.style.display='none';h2.style.display='none';
+  later(()=>{dRail.style.transition='stroke-dashoffset 1.6s var(--ease)';dRail.style.strokeDashoffset=0;
     dn.forEach(([c,t],i)=>later(()=>{c.classList.add('on');t.classList.add('on')},200+i*300));
-    pn.forEach(([c,t,u],i)=>later(()=>{c.classList.add('on');t.classList.add('on');if(u)u.classList.add('on')},200+i*300));
-    later(()=>{dl.classList.add('on');pl.classList.add('on');rl.classList.add('on');rv.classList.add('on')},1400);
+    later(()=>{dl.classList.add('on');rl.classList.add('on')},1400);
   },300);
-  later(()=>{const md=mover(dRail,'dot',7);const me=[0,.12,.24].map(o=>mover(pRail,'edot',5));
-    tween(2200,(p,raw)=>{md(raw);me.forEach((f,i)=>f(Math.max(0,raw-i*0.06)))},()=>{me.forEach(f=>f(1));
-      bridge.style.transition='stroke-dashoffset .5s linear';bridge.style.strokeDashoffset=0;
-      later(()=>{chip.classList.add('hot');chip.setAttribute('filter','url(#jglow)');cl.classList.add('on');cv.classList.add('on')},500);
+  later(()=>{const md=mover(dRail,'dot',7);
+    tween(2200,(p,raw)=>md(raw),()=>{
+      later(()=>{chip.classList.add('hot');chip.setAttribute('filter','url(#jglow)');cl.classList.add('on')},500);
       later(()=>{tokOut.style.transition='stroke-dashoffset 1s var(--ease)';tokOut.style.strokeDashoffset=0;const mt=mover(tokOut,'dot',7);tween(1000,(p,raw)=>mt(raw));later(()=>{t1.classList.add('on');t2.classList.add('on')},800)},1000);
-      later(()=>{heatOut.style.transition='stroke-dashoffset 1.6s var(--ease)';heatOut.style.strokeDashoffset=0;later(()=>{h1.classList.add('on');h2.classList.add('on')},1200)},1300);
     })},2200);
+  svg.__power=()=>{
+    $('#j1h').textContent='Two supply chains. One chip.';
+    pn.forEach(([c,t,u])=>{c.style.display='';t.style.display='';if(u)u.style.display=''});pl.style.display='';rv.style.display='';cv.style.display='';h1.style.display='';h2.style.display='';
+    pRail.style.transition='stroke-dashoffset 1.6s var(--ease)';pRail.style.strokeDashoffset=0;
+    pn.forEach(([c,t,u],i)=>later(()=>{c.classList.add('on');t.classList.add('on');if(u)u.classList.add('on')},200+i*300));
+    later(()=>{pl.classList.add('on');rv.classList.add('on')},1400);
+    later(()=>{const me=[0,.12,.24].map(o=>mover(pRail,'edot',5));
+      tween(2000,(p,raw)=>me.forEach((f,i)=>f(Math.max(0,raw-i*0.06))),()=>{me.forEach(f=>f(1));
+        bridge.style.transition='stroke-dashoffset .5s linear';bridge.style.strokeDashoffset=0;chip.classList.add('hot');cv.classList.add('on');
+        heatOut.style.transition='stroke-dashoffset 1.6s var(--ease)';heatOut.style.strokeDashoffset=0;later(()=>{h1.classList.add('on');h2.classList.add('on')},1200);
+      })},1200);
+  };
 };
+BEAT.journey=(s,b)=>{if(b===1){const svg=$('#j1');if(svg.__power)svg.__power()}};
 
 /* Scene 3b: capex */
 const CAPEX=[[2019,70],[2020,93],[2021,125],[2022,156],[2023,154],[2024,250],[2025,416],[2026,750]];
 ANIM.capex=s=>{
-  $('#capexA').style.display='';$('#capexB').style.display='none';
+  $('#capexA').style.display='';$('#capexB').style.display='none';$('#capexC').style.display='none';
   const svg=$('#capexLine');clear(svg);
   const W=1180,H=420,L=90,R=60,T=40,B=60;
   const ax=el('g',{},svg), lay=el('g',{},svg);
@@ -1002,8 +1067,7 @@ ANIM.capex=s=>{
     });
   },600);
 };
-BEAT.capex=(s,b)=>{
-  if(b!==1)return;
+function capexUSD(s){
   $('#capexA').style.display='none';$('#capexB').style.display='';
   const svg=$('#capexBars');clear(svg);
   // [name, total 2025 USD bn, years]
@@ -1021,6 +1085,24 @@ BEAT.capex=(s,b)=>{
     later(()=>{tween(450,p=>{ab.setAttribute('width',bw(AI[1]*p));av.textContent='$'+fmt(AI[1]*p)+'B / yr';})},300);
   });
 };
+function capexGDP(s){
+  $('#capexB').style.display='none';$('#capexC').style.display='';
+  const svg=$('#capexGdp');clear(svg);
+  // [name, peak % of GDP, when]
+  const rows=[['UK railway mania',7.0,'1847'],['US housing boom',6.6,'2005'],['US railroads',6.0,'1880s'],['Dot-com telecom & fibre',1.2,'2000'],['Apollo programme',0.4,'1966']];
+  const AI=[['AI capex · 2025',1.4,'Apollo / Slok'],['AI capex · 2027F',3.1,'forecast']];
+  const W=1180,L=340,R=170,rowH=54,top=26,max=8;
+  const bw=v=>(W-L-R)*(v/max);
+  const bars=[];
+  rows.forEach((r,i)=>{const y=top+i*rowH;txt(svg,L-18,y+30,r[0],'lbl','end');const t=txt(svg,L-18,y+48,r[2],'lbl','end');t.setAttribute('font-size','14');const b=el('rect',{x:L,y:y+10,width:0,height:30,class:'bar'},svg);const v=txt(svg,L+8,y+31,'','val','start');bars.push([b,v,r[1]])});
+  const ai=[];
+  AI.forEach((r,i)=>{const y=top+rows.length*rowH+14+i*rowH;txt(svg,L-18,y+30,r[0],'val amber','end');const t=txt(svg,L-18,y+48,r[2],'lbl','end');t.setAttribute('font-size','14');const b=el('rect',{x:L,y:y+10,width:0,height:30,class:'bar amber'},svg);const v=txt(svg,L+8,y+31,'','val amber','start');ai.push([b,v,r[1]])});
+  const unit=txt(svg,W-R+150,top-6,'% of GDP, peak year','lbl','end');
+  tween(2600,p=>{bars.forEach(([b,v,x])=>{b.setAttribute('width',bw(x*p));v.textContent=(x*p).toFixed(1)+'%';v.setAttribute('x',L+bw(x*p)+10)})},()=>{
+    later(()=>{tween(900,p=>{ai.forEach(([b,v,x],i)=>{const q=i===0?Math.min(1,p*2):Math.max(0,p*2-1);b.setAttribute('width',bw(x*q));v.textContent=(x*q).toFixed(1)+'%';v.setAttribute('x',L+bw(x*q)+10)})},()=>{const y=top+rows.length*rowH+14+rowH;const n=txt(svg,L,y+rowH+12,'Not the biggest yet. The fastest.','val amber','start');n.setAttribute('font-size','18');const n2=txt(svg,L,y+rowH+36,'+0.85 points of GDP a year · 2× the housing boom · 5× telecom','lbl','start');n2.setAttribute('font-size','15')})},300);
+  });
+};
+BEAT.capex=(s,b)=>{if(b===1)capexUSD(s);else if(b===2)capexGDP(s)};
 
 /* Scene 4: ladder — beats handle it; highlight current rung */
 ANIM.ladder=s=>{$$('.rung',s).forEach(r=>r.classList.remove('cur'))};
@@ -1091,8 +1173,8 @@ ANIM.orbit=s=>{
 };
 
 /* Scene 8: stack flip */
-ANIM.stack=s=>{$('#stack').classList.remove('flip');$('#youtop').style.opacity=1;$('#youbot').style.opacity=0};
-BEAT.stack=(s,b)=>{if(b===1){$('#stack').classList.add('flip');$('#youtop').style.opacity=0;later(()=>$('#youbot').style.opacity=1,700)}};
+ANIM.stack=s=>{$('#stack').classList.remove('go')};
+BEAT.stack=(s,b)=>{if(b===1)$('#stack').classList.add('go')};
 
 /* Scene 9: campus */
 ANIM.campus=s=>{
@@ -1256,7 +1338,31 @@ ANIM.inversion=s=>{$('#swap').classList.remove('go');const c=$('#const');c.inner
 BEAT.inversion=(s,b)=>{if(b===1){$('#swap').classList.add('go');$$('#const .c').forEach((n,i)=>later(()=>n.classList.add('on'),600+i*160))}};
 
 /* Scene 19: flex */
-ANIM.flex=s=>{const a=$('#f1'),b=$('#f2');later(()=>tween(1600,p=>{a.textContent='−'+Math.round(25*p)+'%'}),300);later(()=>tween(500,p=>{b.textContent='−'+Math.round(40*p)+'%'}),1600)};
+/* Scene 19: flex — site power draw over time, two trials */
+function flexChart(id,cfg){
+  const svg=$(id);clear(svg);const W=560,H=230,L=64,R=16,T=44,B=44;
+  const xs=u=>L+u*(W-L-R),ys=v=>H-B-(v/100)*(H-T-B);
+  [0,50,100].forEach(v=>{el('line',{x1:L,x2:W-R,y1:ys(v),y2:ys(v),class:'grid'},svg);const t=txt(svg,L-8,ys(v)+5,v+'%','lbl','end');t.setAttribute('font-size','13')});
+  const yl=txt(svg,L,T-22,'site power draw · % of normal','lbl','start');yl.setAttribute('font-size','13');
+  cfg.ticks.forEach(([u,l])=>{const t=txt(svg,xs(u),H-B+22,l,'lbl','middle');t.setAttribute('font-size','13')});
+  const xl=txt(svg,W-R,H-B+40,cfg.xlabel,'lbl','end');xl.setAttribute('font-size','13');
+  el('rect',{x:xs(cfg.u0),y:T,width:xs(cfg.u1)-xs(cfg.u0),height:H-T-B,class:'flexev'},svg);
+  const et=txt(svg,(xs(cfg.u0)+xs(cfg.u1))/2,ys(cfg.level)+22,cfg.event,'lbl','middle');et.setAttribute('font-size','13');
+  el('line',{x1:L,x2:W-R,y1:ys(100),y2:ys(100),class:'flexbase'},svg);
+  const pts=cfg.pts.map(([u,v])=>xs(u)+' '+ys(v));
+  const path=el('path',{d:'M'+pts.join(' L '),class:'flexline'},svg);const len=path.getTotalLength();path.style.strokeDasharray=len;path.style.strokeDashoffset=len;path.style.transition='stroke-dashoffset '+cfg.dur+'s linear';
+  const lab=txt(svg,(xs(cfg.u0)+xs(cfg.u1))/2,ys(cfg.level)+46,cfg.label,'val amber','middle');lab.setAttribute('font-size','14');lab.setAttribute('opacity',0);
+  return {path,lab};
+}
+ANIM.flex=s=>{
+  const A=flexChart('#flexA',{ticks:[[0.05,'12:00'],[0.25,'13:00'],[0.5,'14:00'],[0.75,'15:00'],[0.95,'16:00']],xlabel:'afternoon peak, local time',u0:0.25,u1:0.75,event:'grid asks for a cut · 3 h',level:75,label:'jobs rescheduled, none dropped',dur:2.6,
+    pts:[[0,100],[0.24,100],[0.27,76],[0.5,75],[0.73,75],[0.76,99],[1,100]]});
+  const Bc=flexChart('#flexB',{ticks:[[0.05,'0 s'],[0.25,'60 s'],[0.5,'120 s'],[0.75,'180 s'],[0.95,'240 s']],xlabel:'one event, of 200+',u0:0.2,u1:0.8,event:'grid signal',level:60,label:'response inside a minute',dur:1.2,
+    pts:[[0,100],[0.2,100],[0.24,70],[0.31,61],[0.5,60],[0.78,60],[0.82,98],[1,100]]});
+  const a=$('#f1'),b=$('#f2');a.textContent='−0%';b.textContent='−0%';
+  later(()=>{A.path.style.strokeDashoffset=0;tween(2600,p=>{a.textContent='−'+Math.round(25*p)+'%'},()=>A.lab.setAttribute('opacity',1))},400);
+  later(()=>{Bc.path.style.strokeDashoffset=0;tween(1200,p=>{b.textContent='−'+Math.round(40*p)+'%'},()=>Bc.lab.setAttribute('opacity',1))},2200);
+};
 
 /* Scene 20: KPIs */
 ANIM.kpis=s=>{$$('[data-count]',s).forEach((n,i)=>{n.textContent='0';later(()=>tween(1600,p=>{n.textContent=Math.round(+n.dataset.count*p)}),400+i*300)})};
@@ -1300,6 +1406,28 @@ ANIM.halflife=s=>{
 
 /* Scene 27: transcript */
 ANIM.transcript=s=>{const rows=$$('#tr div');rows.forEach(r=>r.classList.remove('on'));rows.forEach((r,i)=>later(()=>r.classList.add('on'),300+i*(i===rows.length-1?700:420)))};
+
+/* Scene 27: what customers ask their assistants (haggl.ai cards) */
+const ASKS=[
+  ['James','consultant, abroad every month','Bristol · in Claude','#D97757','✳','Which mobile plan has the best roaming? I need data everywhere.'],
+  ['Callum','frequent traveler, single','Glasgow · in Perplexity','#20808D','P','Best credit card with no foreign fees?'],
+  ['Priya','works from home, two cars','Birmingham · in WhatsApp','#25D366','W','Find me cheaper car insurance. The second car barely moves.'],
+  ['Emma','homeowner, family of four','Leeds · in ChatGPT','#3a3a3a','G','Find us a cheaper electricity contract. We just got an EV.']];
+ANIM.asks=s=>{
+  const st=$('#asksStack');st.innerHTML='';
+  const dimAll=()=>{const cs=$$('.ask',st);cs.forEach((c,i)=>{c.classList.remove('dim1','dim2');const k=cs.length-1-i;if(k===1)c.classList.add('dim1');else if(k>=2)c.classList.add('dim2')})};
+  let t=500;
+  ASKS.forEach(([name,who,where,col,glyph,q],i)=>{
+    later(()=>{
+      const a=document.createElement('div');a.className='ask';
+      a.innerHTML='<div class="ask-in"><div class="ask-card"><div class="ask-meta"><span class="mt" style="background:'+col+'">'+glyph+'</span><b>'+name+'</b><span class="ask-who">'+who+'</span><span class="ask-where">'+where+'</span></div><p class="ask-q"><span class="ask-t"></span><i class="caret"></i></p></div></div>';
+      st.appendChild(a);dimAll();requestAnimationFrame(()=>a.classList.add('in'));
+      const tt=$('.ask-t',a);let j=0;(function type(){if(j<q.length){tt.textContent+=q[j++];later(type,26+Math.random()*40)}else later(()=>a.classList.add('sent'),400)})();
+    },t);
+    t+=1100+q.length*44;
+  });
+};
+
 
 /* Hidden: GDP */
 ANIM.gdp=s=>{
